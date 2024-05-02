@@ -1,0 +1,47 @@
+return {
+  {
+    'echasnovski/mini.move',
+    version = false,
+    -- Module mappings. Use `''` (empty string) to disable one.
+    opts = {
+      mappings = {
+        -- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
+        left = '<M-left>',
+        right = '<M-right>',
+        up = '<M-up>',
+        down = '<M-down>',
+        line_left = '<M-left>',
+        line_right = '<M-right>',
+        line_up = '<M-up>',
+        line_down = '<M-down>',
+      },
+
+      -- Options which control moving behavior
+      options = {
+        -- Automatically reindent selection during linewise vertical move
+        reindent_linewise = true,
+      },
+    },
+  },
+  {
+    {
+      'kdheepak/lazygit.nvim',
+      cmd = {
+        'LazyGit',
+        'LazyGitConfig',
+        'LazyGitCurrentFile',
+        'LazyGitFilter',
+        'LazyGitFilterCurrentFile',
+      },
+      -- optional for floating window border decoration
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+      },
+      -- setting the keybinding for LazyGit with 'keys' is recommended in
+      -- order to load the plugin when the command is run for the first time
+      keys = {
+        { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+      },
+    },
+  },
+}
