@@ -24,24 +24,38 @@ return {
     },
   },
   {
-    {
-      'kdheepak/lazygit.nvim',
-      cmd = {
-        'LazyGit',
-        'LazyGitConfig',
-        'LazyGitCurrentFile',
-        'LazyGitFilter',
-        'LazyGitFilterCurrentFile',
-      },
-      -- optional for floating window border decoration
-      dependencies = {
-        'nvim-lua/plenary.nvim',
-      },
-      -- setting the keybinding for LazyGit with 'keys' is recommended in
-      -- order to load the plugin when the command is run for the first time
-      keys = {
-        { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
-      },
+    'kdheepak/lazygit.nvim',
+    cmd = {
+      'LazyGit',
+      'LazyGitConfig',
+      'LazyGitCurrentFile',
+      'LazyGitFilter',
+      'LazyGitFilterCurrentFile',
     },
+    -- optional for floating window border decoration
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+    },
+  },
+  {
+    'kylelaker/riscv.vim',
+    ft = { 'riscv' },
+    lazy = true, -- For more speed 😎
+
+    -- NOTE: The code below fixes the comments
+    init = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'riscv' },
+        callback = function()
+          vim.opt.commentstring = '# %s'
+        end,
+        desc = 'Add commentstring for riscv files',
+      })
+    end,
   },
 }
