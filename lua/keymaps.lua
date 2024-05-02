@@ -1,6 +1,10 @@
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+local function cmd(string)
+  return '<cmd>' .. string .. '<CR>'
+end
+
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -52,3 +56,4 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 vim.keymap.set({ 'n', 'i' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file with ctrl s' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope find_files cwd=~/.config/nvim<CR>', { desc = 'Find in config' })
+vim.keymap.set('n', '<leader>o', cmd 'Telescope find_files', { desc = 'Find files or something' })
