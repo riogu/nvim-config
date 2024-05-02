@@ -72,7 +72,7 @@ return {
       buttons = {
         {
           label = 'View Code',
-          -- >> WE ARE <<
+          -- WE ARE 🇯🇵👺
           url = 'https://www.youtube.com/watch?v=UIp6_0kct_U',
         },
       },
