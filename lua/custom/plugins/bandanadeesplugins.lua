@@ -42,6 +42,7 @@ return {
       { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
     },
   },
+
   {
     'kylelaker/riscv.vim',
     ft = { 'riscv' },
@@ -57,5 +58,24 @@ return {
         desc = 'Add commentstring for riscv files',
       })
     end,
+  },
+
+  {
+    'andweeb/presence.nvim',
+    opts = {
+      -- TODO: Change these
+      neovim_image_text = '',
+      workspace_text = '',
+      editing_text = '',
+
+      show_time = true,
+      buttons = {
+        {
+          label = 'View Code',
+          -- >> WE ARE <<
+          url = 'https://www.youtube.com/watch?v=UIp6_0kct_U',
+        },
+      },
+    },
   },
 }
