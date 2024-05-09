@@ -61,3 +61,7 @@ vim.keymap.set('n', '<leader>o', cmd ':Oil', { desc = 'Find files or something' 
 -- Undo and redo
 vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
 vim.keymap.set({ 'i', 'n' }, '<S-u>', cmd 'redo', { desc = 'Redo' })
+
+-- Go bandana dee backwards
+vim.keymap.set({ 'i', 't' }, '<C-BS>', '<C-w>', { desc = 'Delete word' })
+vim.keymap.set({ 'i', 't' }, '<C-h>', '<C-w>', { desc = 'Delete word' })
