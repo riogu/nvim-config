@@ -56,8 +56,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 vim.keymap.set({ 'n', 'i' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file with ctrl s' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope find_files cwd=~/.config/nvim<CR>', { desc = 'Find in config' })
-vim.keymap.set('n', '<leader>o', cmd 'Telescope find_files', { desc = 'Find files or something' })
+vim.keymap.set('n', '<leader>o', cmd ':Oil', { desc = 'Find files or something' })
 
 -- Undo and redo
-vim.keymap.set({ 'i', 'n' }, '<C-z>', cmd 'undo', { desc = 'Undo' })
-vim.keymap.set({ 'i', 'n' }, '<C-s-z>', cmd 'redo', { desc = 'Redo' })
+vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
+vim.keymap.set({ 'i', 'n' }, '<S-u>', cmd 'redo', { desc = 'Redo' })

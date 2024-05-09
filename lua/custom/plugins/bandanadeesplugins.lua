@@ -64,7 +64,7 @@ return {
     'andweeb/presence.nvim',
     opts = {
       -- TODO: Change these
-      neovim_image_text = '',
+      neovim_image_text = 'epic',
       workspace_text = '',
       editing_text = '',
 
@@ -77,5 +77,11 @@ return {
         },
       },
     },
+  },
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
 }
