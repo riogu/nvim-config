@@ -63,10 +63,9 @@ return {
   {
     'andweeb/presence.nvim',
     opts = {
-      -- TODO: Change these
       neovim_image_text = 'epic',
-      workspace_text = '',
-      editing_text = '',
+      workspace_text = 'why does this still not have text',
+      editing_text = 'why does this not have text',
 
       show_time = true,
       buttons = {
@@ -84,4 +83,5 @@ return {
     -- Optional dependencies
     dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
+  { 'wakatime/vim-wakatime', lazy = false },
 }
