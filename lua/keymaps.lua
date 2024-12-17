@@ -12,7 +12,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
+-- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -55,13 +55,36 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- vim: ts=2 sts=2 sw=2 et
 
 vim.keymap.set({ 'n', 'i' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file with ctrl s' })
+vim.keymap.set({ 'n', 'i' }, 'º', '<Esc>', { desc = 'leave insert mode' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope find_files cwd=~/.config/nvim<CR>', { desc = 'Find in config' })
 vim.keymap.set('n', '<leader>o', cmd ':Oil', { desc = 'Find files or something' })
-
+vim.keymap.set('n', '<leader>e', cmd ':Explore', { desc = 'Explore-netrw' })
+vim.keymap.set('n', '<leader>m', cmd ':colorscheme material-palenight', { desc = 'Set material palenight theme' })
 -- Undo and redo
+-- vim.keymap.set({ 'n', 'i' }, '<C-/>', cmd ':FloatermNew')
 vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
 vim.keymap.set({ 'n' }, '<S-u>', cmd 'redo', { desc = 'Redo' })
-
 -- Go bandana dee backwards
-vim.keymap.set({ 'i', 't' }, '<C-BS>', '<C-w>', { desc = 'Delete word' })
-vim.keymap.set({ 'i', 't' }, '<C-h>', '<C-w>', { desc = 'Delete word' })
+local map = vim.keymap.set
+
+-- Same thing but for different terminals
+map({ 'i', 't' }, '<C-BS>', '<C-w>', { desc = 'Delete word' })
+map({ 'i', 't' }, '<C-h>', '<C-w>', { desc = 'Delete word' })
+
+-- Window Management
+map('n', '<leader>wv', '<c-w>v', { desc = 'Split window vertically' })
+map('n', '<leader>ws', '<c-w>s', { desc = 'Split window horizontally' })
+map('n', '<leader>wh', '<c-w>h', { desc = 'Go left' })
+map('n', '<leader>wl', '<c-w>l', { desc = 'Go right' })
+map('n', '<leader>wk', '<c-w>k', { desc = 'Go up' })
+map('n', '<leader>wj', '<c-w>j', { desc = 'Go down' })
+map('n', '<leader>wq', '<c-w>q', { desc = 'Close window' })
+map('n', '<leader>wH', '<c-w>H', { desc = 'GO LEFT' })
+map('n', '<leader>wL', '<c-w>L', { desc = 'GO RIGHT' })
+map('n', '<leader>wK', '<c-w>K', { desc = 'GO UP' })
+map('n', '<leader>wJ', '<c-w>J', { desc = 'GO DOWN' })
+map('n', '<leader>wo', '<c-w>o', { desc = 'Close all other windows' })
+map('n', '<leader>w<left>', '<c-w>h', { desc = 'Go left' })
+map('n', '<leader>w<right>', '<c-w>l', { desc = 'Go right' })
+map('n', '<leader>w<up>', '<c-w>k', { desc = 'Go up' })
+map('n', '<leader>w<down>', '<c-w>j', { desc = 'Go down' })

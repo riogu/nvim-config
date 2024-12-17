@@ -1,5 +1,12 @@
 return {
   {
+    'akinsho/toggleterm.nvim',
+    opts = {
+      open_mapping = [[<C-S-7>]], -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
+      direction = 'float', -- 'horizontal' or 'float'
+    },
+  },
+  {
     'echasnovski/mini.move',
     version = false,
     -- Module mappings. Use `''` (empty string) to disable one.
@@ -63,25 +70,40 @@ return {
   {
     'andweeb/presence.nvim',
     opts = {
-      neovim_image_text = 'epic',
-      workspace_text = 'why does this still not have text',
-      editing_text = 'why does this not have text',
+      neovim_image_text = 'i guess neovim is a decent editor...',
+      workspace_text = 'editing a workspace',
+      editing_text = 'editing a file',
 
       show_time = true,
       buttons = {
         {
           label = 'View Code',
           -- WE ARE 🇯🇵👺
-          url = 'https://www.youtube.com/watch?v=UIp6_0kct_U',
+          url = 'https://youtu.be/5uaHMmcReI0?si=TLt9fB-ong1hs0jT',
         },
       },
     },
   },
   {
-    'stevearc/oil.nvim',
-    opts = {},
+    'marko-cerovac/material.nvim',
+    -- lazy = false,
+    -- config = function(_, _)
+    --   --Lua:
+    --   vim.g.material_style = 'deep ocean'
+    -- end,
     -- Optional dependencies
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    --   dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
+  {
+    'voldikss/vim-floaterm',
   },
   { 'wakatime/vim-wakatime', lazy = false },
+  { 'akinsho/toggleterm.nvim', version = '*', config = true },
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = true,
+    -- use opts = {} for passing setup options
+    -- this is equivalent to setup({}) function
+  },
 }
