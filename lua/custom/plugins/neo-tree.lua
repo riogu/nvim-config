@@ -21,7 +21,7 @@ return {
       window = {
         mappings = {
           ['\\'] = 'close_window',
-          ['<c-b>'] = ':Neotree toggle<CR>',
+          ['<c-b>'] = 'close_window',
         },
       },
     },
