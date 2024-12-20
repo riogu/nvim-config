@@ -11,6 +11,7 @@ return {
   keys = {
     { '\\', ':Neotree toggle<CR>', { desc = 'NeoTree reveal' } },
     { '<leader>b', '<cmd>Neotree toggle<CR>', desc = 'Open Neotree' },
+    { '<C-b>', '<cmd>Neotree toggle<CR>', desc = 'Open Neotree' },
   },
   opts = {
     window = {
@@ -20,6 +21,7 @@ return {
       window = {
         mappings = {
           ['\\'] = 'close_window',
+          ['<c-b>'] = ':Neotree toggle<CR>',
         },
       },
     },
