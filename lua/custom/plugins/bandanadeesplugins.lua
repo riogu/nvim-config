@@ -86,13 +86,15 @@ return {
   },
   {
     'marko-cerovac/material.nvim',
-    -- lazy = false,
-    -- config = function(_, _)
-    --   --Lua:
-    --   vim.g.material_style = 'deep ocean'
-    -- end,
+    lazy = false,
+    priority = 1000,
+    config = function(_, _)
+      --Lua:
+      vim.g.material_style = 'deep ocean'
+      vim.cmd 'colorscheme material'
+    end,
     -- Optional dependencies
-    --   dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
   {
     'voldikss/vim-floaterm',
