@@ -90,8 +90,8 @@ return {
     priority = 1000,
     config = function(_, _)
       --Lua:
-      vim.g.material_style = 'deep ocean'
-      vim.cmd 'colorscheme material'
+      -- vim.g.material_style = 'deep ocean'
+      vim.cmd 'colorscheme material-palenight'
     end,
     -- Optional dependencies
     dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -112,32 +112,32 @@ return {
   --     smart_indent_cap = true,
   --   },
   -- },
-  {
-    'nvim-neo-tree/neo-tree.nvim',
-    keys = {
-      { '<leader>b', '<cmd>Neotree toggle<CR>', desc = 'Open Neotree' },
-    },
-    branch = 'v3.x',
-    -- config = function()
-    --   require('neo-tree').setup {
-    --     default_component_configs = {
-    --       auto_expand_width = false,
-    --       view = { adaptive_size = true },
-    --       window = {
-    --         position = 'left',
-    --         width = 5,
-    --       },
-    --     },
-    --   }
-    -- end,
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
-      'MunifTanjim/nui.nvim',
-
-      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-    },
-  },
+  -- {
+  --   'nvim-neo-tree/neo-tree.nvim',
+  --   keys = {
+  --     { '<leader>b', '<cmd>Neotree toggle<CR>', desc = 'Open Neotree' },
+  --   },
+  --   branch = 'v3.x',
+  --   -- config = function()
+  --   --   require('neo-tree').setup {
+  --   --     default_component_configs = {
+  --   --       auto_expand_width = false,
+  --   --       view = { adaptive_size = true },
+  --   --       window = {
+  --   --         position = 'left',
+  --   --         width = 5,
+  --   --       },
+  --   --     },
+  --   --   }
+  --   -- end,
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+  --     'MunifTanjim/nui.nvim',
+  --
+  --     -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+  --   },
+  -- },
   { 'wakatime/vim-wakatime', lazy = false },
   { 'akinsho/toggleterm.nvim', version = '*', config = true },
   {
