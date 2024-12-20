@@ -26,6 +26,16 @@ return {
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
+        -- formatters = {
+        --   clang_format = {
+        --     prepend_args = { '--style=file', '--fallback-style=LLVM' },
+        --   },
+        --   shfmt = {
+        --     prepend_args = { '-i', '4' },
+        --   },
+        -- },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --

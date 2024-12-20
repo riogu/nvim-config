@@ -70,7 +70,7 @@ return {
   {
     'andweeb/presence.nvim',
     opts = {
-      neovim_image_text = 'i guess neovim is a decent editor...',
+      neovim_image_text = 'neovim',
       workspace_text = 'editing a workspace',
       editing_text = 'editing a file',
 
@@ -96,6 +96,45 @@ return {
   },
   {
     'voldikss/vim-floaterm',
+  },
+  -- {
+  --   'HiPhish/rainbow-delimiters.nvim',
+  -- },
+  -- {
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   main = 'ibl',
+  --   ---@module "ibl"
+  --   ---@type ibl.config
+  --   opts = {
+  --
+  --     smart_indent_cap = true,
+  --   },
+  -- },
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    keys = {
+      { '<leader>b', '<cmd>Neotree toggle<CR>', desc = 'Open Neotree' },
+    },
+    branch = 'v3.x',
+    -- config = function()
+    --   require('neo-tree').setup {
+    --     default_component_configs = {
+    --       auto_expand_width = false,
+    --       view = { adaptive_size = true },
+    --       window = {
+    --         position = 'left',
+    --         width = 5,
+    --       },
+    --     },
+    --   }
+    -- end,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'MunifTanjim/nui.nvim',
+
+      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    },
   },
   { 'wakatime/vim-wakatime', lazy = false },
   { 'akinsho/toggleterm.nvim', version = '*', config = true },

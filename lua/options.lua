@@ -62,3 +62,4 @@ vim.opt.scrolloff = 10
 --Lua:
 -- vim: ts=2 sts=2 sw=2 et
 vim.opt['tabstop'] = 4
+-- -- This module contains a number of default definitions

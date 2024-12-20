@@ -53,9 +53,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- vim: ts=2 sts=2 sw=2 et
+-- vim.keymap.del('n', '<C-f>')
 
 vim.keymap.set({ 'n', 'i' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file with ctrl s' })
-vim.keymap.set({ 'n', 'i' }, 'º', '<Esc>', { desc = 'leave insert mode' })
+vim.keymap.set({ 'n', 'i', 'v' }, 'º', '<Esc>', { remap = true, silent = true, desc = 'leave insert mode' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope find_files cwd=~/.config/nvim<CR>', { desc = 'Find in config' })
 vim.keymap.set('n', '<leader>o', cmd ':Oil', { desc = 'Find files or something' })
 vim.keymap.set('n', '<leader>e', cmd ':Explore', { desc = 'Explore-netrw' })
