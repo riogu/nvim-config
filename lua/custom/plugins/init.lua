@@ -4,4 +4,12 @@
 -- See the kickstart.nvim README for more information
 return {
   -- colorscheme = 'palenight',
+  require('lspconfig').ruff.setup {
+    init_options = {
+      settings = {
+        -- Server settings should go here
+        autoformat = false,
+      },
+    },
+  },
 }
