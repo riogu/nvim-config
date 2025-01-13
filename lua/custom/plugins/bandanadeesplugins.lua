@@ -84,6 +84,91 @@ return {
       },
     },
   },
+  -- {
+  --   'ilof2/posterpole.nvim',
+  --   priority = 1000,
+  --   config = function()
+  --     require('posterpole').setup {
+  --       lualine = {
+  --         transparent = true,
+  --       }, -- config here
+  --     }
+  --     -- vim.cmd 'colorscheme posterpole'
+  --
+  --     -- if you need colorscheme without termguicolors support
+  --     -- This variant set termguicolors to false, be aware of using it
+  --     -- vim.cmd("colorscheme posterpole-term")
+  --   end,
+  -- },
+  {
+    'AlexvZyl/nordic.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      -- vim.cmd.colorscheme 'nordic'
+
+      require('nordic').setup {
+        -- This callback can be used to override the colors used in the base palette.
+        on_palette = function(palette) end,
+        -- This callback can be used to override the colors used in the extended palette.
+        after_palette = function(palette) end,
+        -- This callback can be used to override highlights before they are applied.
+        on_highlight = function(highlights, palette) end,
+        -- Enable bold keywords.
+        bold_keywords = true,
+        -- Enable italic comments.
+        italic_comments = false,
+        -- Enable editor background transparency.
+        transparent = {
+          -- Enable transparent background.
+          bg = false,
+          -- Enable transparent background for floating windows.
+          float = false,
+        },
+        -- Enable brighter float border.
+        bright_border = false,
+        -- Reduce the overall amount of blue in the theme (diverges from base Nord).
+        reduced_blue = true,
+        -- Swap the dark background with the normal one.
+        swap_backgrounds = false,
+        -- Cursorline options.  Also includes visual/selection.
+        cursorline = {
+          -- Bold font in cursorline.
+          bold = false,
+          -- Bold cursorline number.
+          bold_number = true,
+          -- Available styles: 'dark', 'light'.
+          theme = 'light',
+          -- Blending the cursorline bg with the buffer bg.
+          blend = 0.85,
+        },
+        noice = {
+          -- Available styles: `classic`, `flat`.
+          style = 'classic',
+        },
+        telescope = {
+          -- Available styles: `classic`, `flat`.
+          style = 'flat',
+        },
+        leap = {
+          -- Dims the backdrop when using leap.
+          dim_backdrop = false,
+        },
+        ts_context = {
+          -- Enables dark background for treesitter-context window
+          dark_background = true,
+        },
+      }
+      require('nordic').load()
+    end,
+  },
+  -- config = function()
+  --   require('lualine').setup {
+  --     options = {
+  --       -- theme = 'auto',
+  --     },
+  --   }
+  -- end,
   {
     'marko-cerovac/material.nvim',
     lazy = false,
@@ -91,7 +176,7 @@ return {
     config = function(_, _)
       --Lua:
       -- vim.g.material_style = 'deep ocean'
-      vim.cmd 'colorscheme material-palenight'
+      -- vim.cmd 'colorscheme material-palenight'
     end,
     -- Optional dependencies
     dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -99,7 +184,26 @@ return {
   {
     'voldikss/vim-floaterm',
   },
-  -- {
+  -- { 'olivercederborg/poimandres.nvim' },
+  -- { 'fxn/vim-monochrome' },
+  {
+    'zenbones-theme/zenbones.nvim',
+    -- Optionally install Lush. Allows for more configuration or extending the colorscheme
+    -- If you don't want to install lush, make sure to set g:zenbones_compat = 1
+    -- In Vim, compat mode is turned on as Lush only works in Neovim.
+    dependencies = 'rktjmp/lush.nvim',
+    lazy = false,
+    priority = 1000,
+    -- you can set set configuration options here
+    config = function()
+      --     vim.g.zenbones_darken_comments = 45
+      --
+      -- vim.cmd.colorscheme 'zenbones'
+    end,
+  },
+  -- { 'ellisonleao/gruvbox.nvim', priority = 1000, config = true },
+  -- { 'rebelot/kanagawa.nvim', priority = 1000, config = true },
+  { 'sainnhe/gruvbox-material', priority = 1000 }, -- {
   --   'HiPhish/rainbow-delimiters.nvim',
   -- },
   -- {
@@ -147,4 +251,15 @@ return {
     -- use opts = {} for passing setup options
     -- this is equivalent to setup({}) function
   },
+  -- {
+  --   'nvim-lualine/lualine.nvim',
+  --   dependencies = { 'nvim-tree/nvim-web-devicons' },
+  --   config = function()
+  --     require('lualine').setup {
+  --       options = {
+  --         theme = 'nordic',
+  --       },
+  --     }
+  --   end,
+  -- },
 }

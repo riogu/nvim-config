@@ -11,7 +11,8 @@ return {
     -- change default options here
     -- Enable all provided keymaps
     keymaps = {
-      basic = true,
+      -- i removed this line below this comment
+      -- basic = true,
       -- extra = true,
     },
     -- Custom scroll options
