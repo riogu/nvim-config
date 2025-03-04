@@ -2,7 +2,7 @@ return {
   {
     'akinsho/toggleterm.nvim',
     opts = {
-      open_mapping = [[<C-S-7>]], -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
+      open_mapping = {[[<C-S-7>]],[[<c-/>]]}, -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
       direction = 'float', -- 'horizontal' or 'float'
     },
   },
