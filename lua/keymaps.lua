@@ -58,8 +58,8 @@ vim.keymap.set('n', '<space>fb', ':Telescope file_browser path=%:p:h select_buff
 vim.keymap.set({ 'n', 'i' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file with ctrl s' })
 vim.keymap.set({ 'n', 'i', 'v' }, 'º', '<Esc>', { remap = true, silent = true, desc = 'leave insert mode' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope find_files cwd=~/.config/nvim<CR>', { desc = 'Find in config' })
-vim.keymap.set('n', '<leader>o', cmd ':Oil', { desc = 'Find files or something' })
-vim.keymap.set('n', '<leader>e', cmd ':Explore', { desc = 'Explore-netrw' })
+vim.keymap.set('n', '<leader>e', cmd ':Oil', { desc = 'Find files or something' })
+-- vim.keymap.set('n', '<leader>e', cmd ':Explore', { desc = 'Explore-netrw' })
 vim.keymap.set('n', '<leader>m', cmd ':colorscheme material-palenight', { desc = 'Set material palenight theme' })
 -- Undo and redo
 -- vim.keymap.set({ 'n', 'i' }, '<C-/>', cmd ':FloatermNew')

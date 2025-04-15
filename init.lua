@@ -92,9 +92,9 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
+-- vim.g.netrw_banner = 0
 -- [[ Setting options ]]
 require 'options'
-
 -- [[ Basic Keymaps ]]
 require 'keymaps'
 

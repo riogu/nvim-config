@@ -2,7 +2,7 @@ return {
   {
     'akinsho/toggleterm.nvim',
     opts = {
-      open_mapping = {[[<C-S-7>]],[[<c-/>]]}, -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
+      open_mapping = { [[<C-S-7>]], [[<c-/>]] }, -- or { [[<c-\>]], [[<c-¥>]] } if you also use a Japanese keyboard.
       direction = 'float', -- 'horizontal' or 'float'
     },
   },
@@ -263,14 +263,38 @@ return {
   --   end,
   -- },
   {
-    "folke/persistence.nvim",
-    event = "BufReadPre",
+    'folke/persistence.nvim',
+    event = 'BufReadPre',
     opts = {},
     keys = {
-      { "<leader>qs", function() require("persistence").load() end, desc = "Restore Session" },
-      { "<leader>qS", function() require("persistence").select() end,desc = "Select Session" },
-      { "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
-      { "<leader>qd", function() require("persistence").stop() end, desc = "Don't Save Current Session" },
+      {
+        '<leader>qs',
+        function()
+          require('persistence').load()
+        end,
+        desc = 'Restore Session',
+      },
+      {
+        '<c-l>',
+        function()
+          require('persistence').select()
+        end,
+        desc = 'Select Session',
+      },
+      {
+        '<leader>ql',
+        function()
+          require('persistence').load { last = true }
+        end,
+        desc = 'Restore Last Session',
+      },
+      {
+        '<leader>qd',
+        function()
+          require('persistence').stop()
+        end,
+        desc = "Don't Save Current Session",
+      },
     },
-  }
+  },
 }
