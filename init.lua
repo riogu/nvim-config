@@ -93,7 +93,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- vim.g.did_load_netrw = 1
--- vim.g.netrw_banner = 0
+vim.g.netrw_banner = 0
 -- [[ Setting options ]]
 require 'options'
 -- [[ Basic Keymaps ]]

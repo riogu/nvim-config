@@ -59,8 +59,24 @@ vim.keymap.set({ 'n', 'i' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file with ctr
 vim.keymap.set({ 'n', 'i', 'v' }, 'º', '<Esc>', { remap = true, silent = true, desc = 'leave insert mode' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope find_files cwd=~/.config/nvim<CR>', { desc = 'Find in config' })
 -- vim.keymap.set('n', '<leader>e', cmd ':Oil', { desc = 'Find files or something' })
-vim.keymap.set('n', '<leader>e', cmd ':Explore', { desc = 'Explore-netrw' })
+vim.keymap.set('n', '-', cmd ':Explore', { desc = 'Explore-netrw' })
+vim.keymap.set('n', 'e', cmd ':Explore', { desc = 'Explore-netrw' })
 vim.keymap.set('n', '<leader>m', cmd ':colorscheme material-palenight', { desc = 'Set material palenight theme' })
+
+-- nmap ^ :<c-u>call netrw#Call('NetrwBrowseUpDir', 1)<cr>
+-- vim.keymap.set('n', 'e', function()
+--   if vim.api.nvim_buf_get_option(0, 'filetype') == 'netrw' then
+--     vim.keymap.set('n', 'e', cmd '-', { desc = 'Explore-netrw' })
+--     vim.api.nvim_exec2(':echo-', {})
+--   else
+--     -- vim.keymap.set('n', 'e', cmd ':Explore', { desc = 'Explore-netrw' })
+--     -- vim.api.nvim_exec('-', false)
+--     -- vim.api.nvim_exec2(':Explore', {})
+--     -- vim.api.nvim_exec(':Explore', false)
+--   end
+-- end, {})
+
+
 -- Undo and redo
 -- vim.keymap.set({ 'n', 'i' }, '<C-/>', cmd ':FloatermNew')
 vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
@@ -105,3 +121,18 @@ map('n', 'w<left>', '<c-w>h', { desc = 'Go left' })
 map('n', 'w<right>', '<c-w>l', { desc = 'Go right' })
 map('n', 'w<up>', '<c-w>k', { desc = 'Go up' })
 map('n', 'w<down>', '<c-w>j', { desc = 'Go down' })
+
+
+
+
+-- vim.keymap.set('i', '<c-f>', "<Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR", { desc="create inkscape figure", silent = true, noremap = true })
+-- inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR
+-- nmap <expr> ^ &ft ==# 'netrw' ? '-' : '^'
+
+-- vim.g.did_load_netrw = 1
+--   vim.keymap.set('n', 'e', '<Plug>(NetrwBrowseUpDir)',{silent = true, noremap = true, buffer = true})
+--
+
+
+
+
