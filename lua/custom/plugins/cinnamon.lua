@@ -18,7 +18,7 @@ return {
     -- Custom scroll options
     options = {
       mode = 'cursor', -- Animate cursor and window scrolling for any movement
-      delay = 6, -- Delay between each movement step (in ms)
+      delay = 7, -- Delay between each movement step (in ms)
       step_size = {
         vertical = 1, -- Number of cursor/window lines moved per step
         horizontal = 2, -- Number of cursor/window columns moved per step
@@ -40,9 +40,9 @@ return {
     -- kyun da kyun says: I am assuming that you're not actually using these
     -- { '<c-f>', '<cmd>lua require("cinnamon").scroll("<C-f>zz")<cr>', mode = 'n' },
     -- { '<c-b>', '<cmd>lua require("cinnamon").scroll("<C-b>zz")<cr>', mode = 'n' },
-    { 'zz', '<cmd>lua require("cinnamon").scroll("zz")<cr>', mode = 'n' },
-    { 'zt', '<cmd>lua require("cinnamon").scroll("zt")<cr>', mode = 'n' },
-    { 'zb', '<cmd>lua require("cinnamon").scroll("zb")<cr>', mode = 'n' },
+    -- { 'zz', '<cmd>lua require("cinnamon").scroll("zz")<cr>', mode = 'n' },
+    -- { 'zt', '<cmd>lua require("cinnamon").scroll("zt")<cr>', mode = 'n' },
+    -- { 'zb', '<cmd>lua require("cinnamon").scroll("zb")<cr>', mode = 'n' },
     -- { 'gg', '<cmd>lua require("cinnamon").scroll("gg")<cr>', mode = 'n' },
     -- { 'G', '<cmd>lua require("cinnamon").scroll("G")<cr>', mode = 'n' },
   },

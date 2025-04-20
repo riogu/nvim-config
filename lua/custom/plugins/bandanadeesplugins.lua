@@ -148,7 +148,7 @@ return {
         },
         telescope = {
           -- Available styles: `classic`, `flat`.
-          style = 'flat',
+          style = 'classic',
         },
         leap = {
           -- Dims the backdrop when using leap.
@@ -299,7 +299,7 @@ return {
   },
   {
     'prichrd/netrw.nvim',
-   config = function()
+    config = function()
       require('netrw').setup {
         -- File icons to use when `use_devicons` is false or if
         -- no icon is found for the given file type.
