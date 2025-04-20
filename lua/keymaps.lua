@@ -76,7 +76,6 @@ vim.keymap.set('n', '<leader>m', cmd ':colorscheme material-palenight', { desc =
 --   end
 -- end, {})
 
-
 -- Undo and redo
 -- vim.keymap.set({ 'n', 'i' }, '<C-/>', cmd ':FloatermNew')
 vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
@@ -122,9 +121,6 @@ map('n', 'w<right>', '<c-w>l', { desc = 'Go right' })
 map('n', 'w<up>', '<c-w>k', { desc = 'Go up' })
 map('n', 'w<down>', '<c-w>j', { desc = 'Go down' })
 
-
-
-
 -- vim.keymap.set('i', '<c-f>', "<Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR", { desc="create inkscape figure", silent = true, noremap = true })
 -- inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR
 -- nmap <expr> ^ &ft ==# 'netrw' ? '-' : '^'
@@ -132,7 +128,4 @@ map('n', 'w<down>', '<c-w>j', { desc = 'Go down' })
 -- vim.g.did_load_netrw = 1
 --   vim.keymap.set('n', 'e', '<Plug>(NetrwBrowseUpDir)',{silent = true, noremap = true, buffer = true})
 --
-
-
-
 
