@@ -4,11 +4,11 @@ return {
     lazy = false,
     keys = {
       {
-        '<leader>f',
+        'ff',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
-        mode = '',
+        mode = 'n',
         desc = '[F]ormat buffer',
       },
     },
@@ -24,7 +24,7 @@ return {
       --     lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
       --   }
       -- end,
-      format_on_save = false,
+      format_on_save = true,
       formatters_by_ft = {
         lua = { 'stylua' },
         c = { 'clang_format' },

@@ -79,14 +79,12 @@ vim.keymap.set('n', '<leader>m', cmd ':colorscheme material-palenight', { desc =
 -- Undo and redo
 -- vim.keymap.set({ 'n', 'i' }, '<C-/>', cmd ':FloatermNew')
 vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
-vim.keymap.set({ 'n' }, '<S-u>', cmd 'redo', { desc = 'Redo' })
 -- Go bandana dee backwards
+vim.keymap.set({ 'n' }, '<S-u>', cmd 'redo', { desc = 'Redo' })
 local map = vim.keymap.set
-
 -- Same thing but for different terminals
 map({ 'i', 't' }, '<C-BS>', '<C-w>', { desc = 'Delete word' })
 map({ 'i', 't' }, '<C-h>', '<C-w>', { desc = 'Delete word' })
-
 -- Window Management
 map('n', '<leader>wv', '<c-w>v', { desc = 'Split window vertically' })
 map('n', '<leader>ws', '<c-w>s', { desc = 'Split window horizontally' })
@@ -99,7 +97,7 @@ map('n', '<leader>wH', '<c-w>H', { desc = 'GO LEFT' })
 map('n', '<leader>wL', '<c-w>L', { desc = 'GO RIGHT' })
 map('n', '<leader>wK', '<c-w>K', { desc = 'GO UP' })
 map('n', '<leader>wJ', '<c-w>J', { desc = 'GO DOWN' })
-map('n', '<leader>wo', '<c-w>o', { desc = 'Close all other windows' })
+-- map('n', '<leader>wo', '<c-w>o', { desc = 'Close all other windows' })
 map('n', '<leader>w<left>', '<c-w>h', { desc = 'Go left' })
 map('n', '<leader>w<right>', '<c-w>l', { desc = 'Go right' })
 map('n', '<leader>w<up>', '<c-w>k', { desc = 'Go up' })
@@ -115,7 +113,7 @@ map('n', 'wH', '<c-w>H', { desc = 'GO LEFT' })
 map('n', 'wL', '<c-w>L', { desc = 'GO RIGHT' })
 map('n', 'wK', '<c-w>K', { desc = 'GO UP' })
 map('n', 'wJ', '<c-w>J', { desc = 'GO DOWN' })
-map('n', 'wo', '<c-w>o', { desc = 'Close all other windows' })
+-- map('n', 'wo', '<c-w>o', { desc = 'Close all other windows' })
 map('n', 'w<left>', '<c-w>h', { desc = 'Go left' })
 map('n', 'w<right>', '<c-w>l', { desc = 'Go right' })
 map('n', 'w<up>', '<c-w>k', { desc = 'Go up' })
@@ -128,4 +126,3 @@ map('n', 'w<down>', '<c-w>j', { desc = 'Go down' })
 -- vim.g.did_load_netrw = 1
 --   vim.keymap.set('n', 'e', '<Plug>(NetrwBrowseUpDir)',{silent = true, noremap = true, buffer = true})
 --
-

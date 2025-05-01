@@ -158,10 +158,15 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = { autoformat = false, cmd = {
-          'clangd',
-          '--header-insertion=never',
-        } },
+        clangd = {
+          autoformat = false,
+          cmd = {
+            'clangd',
+            '--header-insertion=never',
+            '--function-arg-placeholders=0',
+          },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
+        },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},

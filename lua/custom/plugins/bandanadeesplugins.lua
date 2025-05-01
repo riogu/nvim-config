@@ -320,4 +320,9 @@ return {
       }
     end,
   },
+  -- vim.api.nvim_create_autocmd('DiagnosticChanged', {
+  --   callback = function(args)
+  --     vim.diagnostic.setloclist { open = false }
+  --   end,
+  -- }),
 }
