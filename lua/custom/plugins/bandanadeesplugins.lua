@@ -159,7 +159,7 @@ return {
           dark_background = true,
         },
       }
-      require('nordic').load()
+      -- require('nordic').load()
     end,
   },
   -- config = function()

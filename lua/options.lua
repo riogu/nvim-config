@@ -64,3 +64,10 @@ vim.opt.scrolloff = 2
 -- vim: ts=2 sts=2 sw=2 et
 vim.opt['tabstop'] = 4
 -- -- This module contains a number of default definitions
+-- dev = {
+--   ---@type string | fun(plugin: LazyPlugin): string directory where you store your local plugin projects
+--   path = '~/.config/nvim/lua/gruber-riogu/',
+--   ---@type string[] plugins that match these patterns will use your local versions instead of being fetched from GitHub
+--   patterns = {}, -- For example {"folke"}
+--   fallback = false, -- Fallback to git when local plugin doesn't exist
+-- }
