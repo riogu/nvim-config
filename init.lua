@@ -149,7 +149,6 @@ colorscheme riogu-minimal
 --
 -- })
 
-
 -- vim.api.nvim_set_hl(0, "YankHighlight", { bg = "#ADD8E6", fg = "#0000FF" })
 --
 -- vim.api.nvim_create_autocmd("TextYankPost", {
@@ -162,4 +161,4 @@ colorscheme riogu-minimal
 --
 -- vim.highlight.on_yank({ higroup = "YankHighlight", timeout = 300 })
 --
--- end, 
+-- end,

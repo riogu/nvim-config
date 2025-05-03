@@ -10,6 +10,7 @@ local p = {
   even_even_even_softer_grey_highlight = '#8899BE',
   most_soft_grey_highlight = '#8897B6',
   variable_scope_color = '#CDD4E8',
+  almost_background_color = '#313645',
 
   global_blue = '#567CC6',
   global_red = '#e35c5c',
@@ -122,7 +123,7 @@ local highlight_groups = {
   Conditional = { fg = p.soft_pinkish },
   Normal = { fg = p.normal_text_gray, bg = p.background_color },
   NormalNC = { link = 'Normal' },
-  MsgArea = { fg = p.normal_text_gray, bg = p.background_color },
+  MsgArea = { fg = p.gold_yellow, bg = p.almost_background_color },
   NormalFloat = { fg = p.gold_yellow },
   Bold = { bold = true },
   Italic = { italic = true },
@@ -144,9 +145,13 @@ local highlight_groups = {
   CursorLine = { fg = 'NONE', bg = p.soft_grey_highlight },
   CursorLineNr = { fg = p.gold_yellow, bg = 'NONE' },
   Cursor = { bg = p.variable_scope_color },
-  StatusLine = { fg = p.gold_yellow, bg = '#313645' },
-  StatusLineNC = { fg = p.even_even_softer_grey_highlight, bg = '#313645' },
+  -- Status line ------------------------------------------
+  StatusLine = { fg = p.gold_yellow, bg = p.almost_background_color },
+  StatusLineNC = { fg = p.even_even_softer_grey_highlight, bg = p.almost_background_color },
   WinSeparator = { fg = p.soft_grey_highlight, bg = 'NONE' },
+  StatusLineAccent = { bg = p.almost_background_color },
+  -- Mode = { bg =p.almost_background_color },
+  -----------------------------------------------------------
   SignColumn = { bg = p.background_color },
   Colorcolumn = { link = 'StatusLine' },
   TabLineFill = { bg = p.soft_grey_highlight },
