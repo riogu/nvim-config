@@ -145,7 +145,7 @@ local highlight_groups = {
   CursorLineNr = { fg = p.gold_yellow, bg = 'NONE' },
   Cursor = { bg = p.variable_scope_color },
   StatusLine = { fg = p.gold_yellow, bg = '#313645' },
-  StatusLineNC = { fg = p.even_even_softer_grey_highlight, bg = 'NONE' },
+  StatusLineNC = { fg = p.even_even_softer_grey_highlight, bg = '#313645' },
   WinSeparator = { fg = p.soft_grey_highlight, bg = 'NONE' },
   SignColumn = { bg = p.background_color },
   Colorcolumn = { link = 'StatusLine' },
@@ -161,7 +161,8 @@ local highlight_groups = {
   -- YankHighlight = { bg = p.gold_yellow },
 
   -- telescope stuff-----------
-
+  ['@variable.parameter.python'] = { fg = p.soft_pinkish },
+  -- ['@variable.python'] = { fg = p.soft_pinkish },
   -- TelescopeMatching = { fg = p.variable_whiteish },
   -- TelescopeSelection = { fg = p.variable_whiteish },
   TelescopeResultsTitle = { fg = p.variable_whiteish, bold = true },
@@ -247,9 +248,9 @@ local highlight_groups = {
   ['@conditional'] = { link = 'Conditional' },
   ['@exception'] = { link = 'Exception' },
   ['@lsp.type.namespace'] = { fg = p.gold_yellow },
-  ['@lsp.type.typeParameter'] = { fg = p.parameter_orangeish },
+  ['@lsp.type.typeParameter'] = { fg = p.soft_pinkish },
   -- LSP
-  ['@lsp.type.parameter'] = { fg = p.parameter_orangeish },
+  ['@lsp.type.parameter'] = { fg = p.soft_pinkish },
   ['@lsp.type.variable.cpp'] = { fg = p.variable_scope_color },
   ['@lsp.type.enumMember'] = { fg = p.string_green },
   ['@lsp.type.interface'] = { fg = p.gold_yellow },
