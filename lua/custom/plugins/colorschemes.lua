@@ -1,7 +1,7 @@
 return {
-  -- { 'blazkowolf/gruber-darker.nvim' },
   {
-    'riogu/gruber-darker-theme.nvim',
+    'blazkowolf/gruber-darker.nvim',
+    -- 'riogu/gruber-darker-theme.nvim',
     priority = 1000,
     lazy = false,
     config = function()

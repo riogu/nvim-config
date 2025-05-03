@@ -1,1 +1,0 @@
-require('gruber-riogu').setup()

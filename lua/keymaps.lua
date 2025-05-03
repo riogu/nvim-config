@@ -80,7 +80,7 @@ vim.keymap.set('n', '<leader>m', cmd ':colorscheme material-palenight', { desc =
 -- vim.keymap.set({ 'n', 'i' }, '<C-/>', cmd ':FloatermNew')
 vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
 -- Go bandana dee backwards
-vim.keymap.set({ 'n' }, '<S-u>', cmd 'redo', { desc = 'Redo' })
+vim.keymap.set({ 'n' }, '<S-u>', cmd 'redo', { silent = true, desc = 'Redo' })
 local map = vim.keymap.set
 -- Same thing but for different terminals
 map({ 'i', 't' }, '<C-BS>', '<C-w>', { desc = 'Delete word' })

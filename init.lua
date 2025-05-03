@@ -94,6 +94,7 @@ vim.g.have_nerd_font = true
 
 -- vim.g.did_load_netrw = 1
 vim.g.netrw_banner = 0
+vim.g.command_height = 0
 -- [[ Setting options ]]
 require 'options'
 -- [[ Basic Keymaps ]]
@@ -126,5 +127,5 @@ syntax on
 " let g:sierra_Twilight = 1
 " let g:sierra_Midnight = 1
 " let g:sierra_Pitch = 1
-colorscheme gruber-riogu
+colorscheme riogu-minimal
 ]]
