@@ -2,6 +2,7 @@ local M = {}
 
 local p = {
   variable_whiteish = '#7A8BB8',
+  lighter_variable_whiteish = '#97A7D2',
   normal_text_gray = '#E7F2FC',
   soft_grey_highlight = '#3A4356',
   softer_grey_highlight = '#445069',
@@ -19,7 +20,7 @@ local p = {
   dark_green = '#5C898B',
   string_green = '#589A8F',
   struct_strong_blue = '#A7B3EC',
-  directory_color = '#4C76AC',
+  directory_color = '#5C898B',
   parameter_orangeish = '#5E80B7',
   stronger_directory_color = '#78B7D7',
 
@@ -124,12 +125,12 @@ local highlight_groups = {
   Normal = { fg = p.normal_text_gray, bg = p.background_color },
   NormalNC = { link = 'Normal' },
   MsgArea = { fg = p.gold_yellow, bg = p.almost_background_color },
-  NormalFloat = { fg = p.gold_yellow },
+  NormalFloat = { bg = p.almost_background_color, fg = 'NONE' },
   Bold = { bold = true },
   Italic = { italic = true },
   Underlined = { undercurl = true },
   Visual = { bg = p.soft_grey_highlight, fg = 'NONE' },
-  Directory = { fg = p.directory_color, bold = true },
+  Directory = { fg = p.function_name_blue, bold = true },
   IncSearch = { fg = 'NONE', bg = p.even_softer_grey_highlight }, -- yanking color
   Search = { link = 'IncSearch' },
   Substitute = { link = 'IncSearch' },
@@ -137,7 +138,7 @@ local highlight_groups = {
   ModeMsg = { link = 'Normal' },
   MoreMsg = { link = 'Normal' },
   WarningMsg = { link = 'Normal' },
-  FloatBorder = { fg = p.gruber_darker_wisteria, bg = 'NONE' },
+  FloatBorder = { fg = p.even_softer_grey_highlight, bg = 'NONE' },
   NonText = { link = 'Normal' },
   LineNr = { bg = p.background_color, fg = p.soft_grey_highlight },
   LineNrAbove = { link = 'LineNr' },
@@ -158,10 +159,10 @@ local highlight_groups = {
   TabLine = { bg = p.soft_grey_highlight },
   TabLineSel = { fg = 'NONE', bg = p.soft_grey_highlight },
   Whitespace = { bg = 'NONE', fg = p.variable_whiteish },
-  Pmenu = { fg = p.variable_whiteish, bg = p.gruber_darker_niagara_dark },
-  PmenuSel = { bg = p.softer_grey_highlight },
+  Pmenu = { fg = p.variable_whiteish, bg = p.almost_background_color },
+  PmenuSel = { bg = p.almost_background_color, fg = p.normal_text_gray },
   PmenuThumb = { bg = p.greyish_green_riogu },
-  PmenuSbar = { bg = p.gruber_darker_bg_p1 },
+  PmenuSbar = { bg = p.softer_grey_highlight },
 
   -- YankHighlight = { bg = p.gold_yellow },
 
@@ -205,10 +206,10 @@ local highlight_groups = {
   Function = { fg = p.function_name_blue },
   Identifier = { fg = p.variable_whiteish },
   Include = { link = 'PreProc' },
-  Keyword = { fg = p.variable_whiteish }, -- for loops and if statements (lmao)
+  Keyword = { fg = p.lighter_variable_whiteish }, -- for loops and if statements (lmao)
   Label = { link = 'String' },
   Number = { fg = '#E0B4BB' },
-  Float = { link = 'Number' },
+  Float = { bg = p.almost_background_color },
   Operator = { fg = p.most_soft_grey_highlight },
   PreProc = { fg = p.global_blue },
 
@@ -218,9 +219,9 @@ local highlight_groups = {
   SpecialComment = { link = 'SpecialChar' },
   SpecialKey = { link = 'Special' },
   Statement = { link = 'Type' },
-  StorageClass = { link = 'Keyword' },
+  StorageClass = { fg = p.lighter_variable_whiteish },
   String = { fg = p.string_green },
-  Structure = { fg = '#7281C7' },
+  Structure = { fg = p.function_name_blue },
   Variable = { fg = p.even_even_even_softer_grey_highlight },
   Tag = { link = 'SpecialChar' },
   Todo = { fg = p.todo_fg, bg = p.todo_bg },
@@ -249,12 +250,13 @@ local highlight_groups = {
   ['@variable.builtin'] = { link = 'Type' },
   ['@operator'] = { link = 'Operator' },
   ['@punctuation.special'] = { link = 'Specialchar' },
-  ['@punctuation.bracket'] = { link = 'Normal' },
+  ['@punctuation.bracket'] = { fg = p.lighter_variable_whiteish },
   ['@conditional'] = { link = 'Conditional' },
   ['@exception'] = { link = 'Exception' },
   ['@lsp.type.namespace'] = { fg = p.gold_yellow },
   ['@lsp.type.typeParameter'] = { fg = p.soft_pinkish },
   -- LSP
+  -- ['@lsp.type.class.cpp'] = { fg = p.function_name_blue },
   ['@lsp.type.parameter'] = { fg = p.soft_pinkish },
   ['@lsp.type.variable.cpp'] = { fg = p.variable_scope_color },
   ['@lsp.type.enumMember'] = { fg = p.string_green },
@@ -263,7 +265,7 @@ local highlight_groups = {
   ['@lsp.typemod.property.classScope.cpp'] = { fg = p.variable_whiteish },
   ['@lsp.type.macro'] = { fg = p.macro_green },
   ['@keyword.modifier.cpp'] = { fg = '#E49E73' },
-  ['@punctuation.bracket.cpp'] = { fg = p.most_soft_grey_highlight },
+  -- ['@punctuation.bracket.cpp'] = { fg = p.variable_whiteish },
   ['@keyword.import.cpp'] = { fg = p.global_blue },
   ExtraWhiteSpace = { bg = 'NONE' },
   MiniExtra = { bg = 'NONE' },
@@ -285,7 +287,8 @@ local highlight_groups = {
   ['@lsp.typemod.property.defaultLibrary.javascript'] = { fg = p.gruber_darker_quartz },
   ['@lsp.typemod.member.defaultLibrary.javascript'] = { fg = p.gruber_darker_niagara },
   -- Markdown
-  ['markdownCodeBlock'] = { link = 'String' },
+  -- ['markdownCodeBlock'] = { link = 'String' },
+  -- ['@markup.raw.block.markdown'] = { bg = 'NONE' },
   -- Diff
   DiffAdd = { fg = 'NONE', bg = p.gruber_darker_green_custom_m1 },
   DiffAdded = { fg = p.gruber_darker_green_custom, bg = 'NONE' },
@@ -305,8 +308,8 @@ local highlight_groups = {
   --Diagnostic
   DiagnosticSignError = { fg = p.gruber_darker_red_custom, bg = 'NONE' },
   DiagnosticSignWarn = { fg = p.gold_yellow, bg = 'NONE' },
-  DiagnosticSignHint = { fg = p.gruber_darker_bg_p3, bg = 'NONE' },
-  DiagnosticSignInfo = { fg = p.todo_fg, bg = 'NONE' },
+  DiagnosticSignHint = { fg = p.gruber_darker_bg_p3, bg = p.almost_background_color },
+  DiagnosticSignInfo = { fg = p.todo_fg, bg = p.almost_background_color },
   DiagnosticError = { link = 'DiagnosticSignError' },
   DiagnosticUnderlineError = { undercurl = true, sp = p.red_fixme }, -- NOTE: important
   DiagnosticWarn = { link = 'DiagnosticSignWarn' },
