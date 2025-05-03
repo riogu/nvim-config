@@ -1,6 +1,6 @@
 return {
   {
-    'blazkowolf/gruber-darker.nvim',
+    'behemothbucket/gruber-darker.nvim',
     -- 'riogu/gruber-darker-theme.nvim',
     priority = 1000,
     lazy = false,

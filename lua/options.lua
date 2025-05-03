@@ -49,13 +49,12 @@ vim.opt.splitbelow = true
 --  and `:help 'listchars'`
 vim.opt.list = true
 -- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-vim.opt.listchars = { trail = '⚬', tab = '>-', nbsp = '␣' }
+vim.opt.listchars = { trail = ' ', tab = '>-', nbsp = '␣' }
 
 -- vim.opt.wrap = false
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
-
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 

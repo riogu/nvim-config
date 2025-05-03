@@ -129,7 +129,7 @@ local highlight_groups = {
   Underlined = { undercurl = true },
   Visual = { bg = p.soft_grey_highlight, fg = 'NONE' },
   Directory = { fg = p.directory_color, bold = true },
-  IncSearch = { fg = p.variable_whiteish, bg = p.gruber_darker_niagara_m1 },
+  IncSearch = { fg = 'NONE', bg = p.even_softer_grey_highlight }, -- yanking color
   Search = { link = 'IncSearch' },
   Substitute = { link = 'IncSearch' },
   MatchParen = { fg = 'NONE', bg = p.soft_grey_highlight },
@@ -152,11 +152,30 @@ local highlight_groups = {
   TabLineFill = { bg = p.soft_grey_highlight },
   TabLine = { bg = p.soft_grey_highlight },
   TabLineSel = { fg = 'NONE', bg = p.soft_grey_highlight },
-  Whitespace = { bg = 'NONE' },
-  Pmenu = { fg = 'NONE', bg = p.gruber_darker_niagara_dark },
+  Whitespace = { bg = 'NONE', fg = p.variable_whiteish },
+  Pmenu = { fg = p.variable_whiteish, bg = p.gruber_darker_niagara_dark },
   PmenuSel = { bg = p.softer_grey_highlight },
   PmenuThumb = { bg = p.greyish_green_riogu },
   PmenuSbar = { bg = p.gruber_darker_bg_p1 },
+
+  -- YankHighlight = { bg = p.gold_yellow },
+
+  -- telescope stuff-----------
+
+  -- TelescopeMatching = { fg = p.variable_whiteish },
+  -- TelescopeSelection = { fg = p.variable_whiteish },
+  TelescopeResultsTitle = { fg = p.variable_whiteish, bold = true },
+  TelescopeResultsNormal = { fg = p.variable_whiteish },
+  TelescopeResultsBorder = { fg = p.variable_whiteish },
+  TelescopePreviewTitle = { fg = p.variable_whiteish },
+  TelescopePreviewNormal = { bg = 'NONE' },
+  TelescopePreviewBorder = { fg = p.variable_whiteish, bg = 'NONE' },
+  TelescopePromptTitle = { fg = p.variable_whiteish },
+  TelescopePromptPrefix = { fg = p.variable_whiteish },
+  TelescopePromptCounter = { fg = p.variable_whiteish },
+  TelescopePromptNormal = { fg = p.variable_whiteish },
+  TelescopePromptBorder = { fg = p.variable_whiteish },
+  -----------------------------
   Conceal = { link = 'Operator' },
   Title = { link = 'Normal' },
   Question = { link = 'Normal' },
@@ -296,9 +315,9 @@ local highlight_groups = {
   --Mason
   MasonHeader = { link = 'StatusLine' },
   --Illuminate
-  IlluminatedWordText = { bg = p.gruber_darker_bg_p1, underline = false },
-  IlluminatedWordRead = { bg = p.gruber_darker_bg_p1, underline = false },
-  IlluminatedWordWrite = { bg = p.gruber_darker_bg_p1, underline = false },
+  IlluminatedWordText = { bg = p.gold_yellow, underline = false },
+  IlluminatedWordRead = { bg = p.gold_yellow, underline = false },
+  IlluminatedWordWrite = { bg = p.gold_yellow, underline = false },
 }
 
 function M.setup()

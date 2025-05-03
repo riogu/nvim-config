@@ -7,7 +7,7 @@
 " -----------------------------------------------------------------------------
 
 " Supporting code -------------------------------------------------------------
-" Initialisation: {{{
+" Initialisation: 
 
 if version > 580
   hi clear
@@ -22,8 +22,8 @@ if !has('gui_running') && &t_Co != 256
   finish
 endif
 
-" }}}
-" Global Settings: {{{
+" 
+" Global Settings: 
 
 if !exists('g:materialbox_bold')
   let g:materialbox_bold=1
@@ -79,8 +79,8 @@ endif
 
 let s:is_dark=(&background == 'dark')
 
-" }}}
-" Palette: {{{
+" 
+" Palette: 
 
 " setup palette dictionary
 let s:gb = {}
@@ -134,8 +134,8 @@ let s:gb.faded_purple   = ['#6a1b9a', 96]      " 143-63-113
 let s:gb.faded_aqua     = ['#303F9F', 66]      " 66-123-88
 let s:gb.faded_orange   = ['#E65100', 130]     " 175-58-3
 
-" }}}
-" Setup Emphasis: {{{
+" 
+" Setup Emphasis: 
 
 let s:bold = 'bold,'
 if g:materialbox_bold == 0
@@ -162,8 +162,8 @@ if g:materialbox_inverse == 0
   let s:inverse = ''
 endif
 
-" }}}
-" Setup Colors: {{{
+" 
+" Setup Colors: 
 
 let s:vim_bg = ['bg', 'bg']
 let s:vim_fg = ['fg', 'fg']
@@ -271,9 +271,9 @@ let s:gb.purple = s:purple
 let s:gb.aqua   = s:aqua
 let s:gb.orange = s:orange
 
-" }}}
+" 
 
-" Overload Setting: {{{
+" Overload Setting: 
 
 let s:hls_cursor = s:orange
 if exists('g:materialbox_hls_cursor')
@@ -340,8 +340,8 @@ if exists('g:materialbox_italicize_strings')
   endif
 endif
 
-" }}}
-" Highlighting Function: {{{
+" 
+" Highlighting Function: 
 
 function! s:HL(group, fg, ...)
   " Arguments: group, guifg, guibg, gui, guisp
@@ -389,8 +389,8 @@ function! s:HL(group, fg, ...)
   execute join(histring, ' ')
 endfunction
 
-" }}}
-" materialbox Hi Groups: {{{
+" 
+" materialbox Hi Groups: 
 
 " memoize common hi groups
 call s:HL('materialboxFg0', s:fg0)
@@ -422,10 +422,10 @@ call s:HL('materialboxBlueSign', s:blue, s:sign_column, s:invert_signs)
 call s:HL('materialboxPurpleSign', s:purple, s:sign_column, s:invert_signs)
 call s:HL('materialboxAquaSign', s:aqua, s:sign_column, s:invert_signs)
 
-" }}}
+" 
 
 " Vanilla colorscheme ---------------------------------------------------------
-" General UI: {{{
+" General UI: 
 
 " Normal text
 call s:HL('Normal', s:fg0, s:bg0)
@@ -505,8 +505,8 @@ hi! link Question materialboxOrangeBold
 " Warning messages
 hi! link WarningMsg materialboxRedBold
 
-" }}}
-" Gutter: {{{
+" 
+" Gutter: 
 
 " Line number for :number and :# commands
 call s:HL('LineNr', s:number_column)
@@ -519,8 +519,8 @@ call s:HL('Folded', s:gray, s:bg1, s:italic)
 " Column where folds are displayed
 call s:HL('FoldColumn', s:gray, s:bg1)
 
-" }}}
-" Cursor: {{{
+" 
+" Cursor: 
 
 " Character under cursor
 call s:HL('Cursor', s:none, s:none, s:inverse)
@@ -531,8 +531,8 @@ hi! link iCursor Cursor
 " Language mapping cursor
 hi! link lCursor Cursor
 
-" }}}
-" Syntax Highlighting: {{{
+" 
+" Syntax Highlighting: 
 
 if g:materialbox_improved_strings == 0
   hi! link Special materialboxOrange
@@ -601,8 +601,8 @@ hi! link Structure materialboxAqua
 " typedef
 hi! link Typedef materialboxYellow
 
-" }}}
-" Completion Menu: {{{
+" 
+" Completion Menu: 
 
 if version >= 700
   " Popup menu: normal item
@@ -615,8 +615,8 @@ if version >= 700
   call s:HL('PmenuThumb', s:none, s:bg4)
 endif
 
-" }}}
-" Diffs: {{{
+" 
+" Diffs: 
 
 call s:HL('DiffDelete', s:red, s:bg0, s:inverse)
 call s:HL('DiffAdd',    s:green, s:bg0, s:inverse)
@@ -627,8 +627,8 @@ call s:HL('DiffAdd',    s:green, s:bg0, s:inverse)
 call s:HL('DiffChange', s:aqua, s:bg0, s:inverse)
 call s:HL('DiffText',   s:yellow, s:bg0, s:inverse)
 
-" }}}
-" Spelling: {{{
+" 
+" Spelling: 
 
 if has("spell")
   " Not capitalised word, or compile warnings
@@ -645,41 +645,24 @@ if has("spell")
   call s:HL('SpellRare',  s:none, s:none, s:undercurl, s:purple)
 endif
 
-" }}}
+" 
 
 " Plugin specific -------------------------------------------------------------
-" EasyMotion: {{{
+" EasyMotion: 
 
 hi! link EasyMotionTarget Search
 hi! link EasyMotionShade Comment
 
-" }}}
-" Sneak: {{{
+" 
+" Sneak: 
 
 hi! link SneakPluginTarget Search
 hi! link SneakStreakTarget Search
 call s:HL('SneakStreakMask', s:yellow, s:yellow)
 hi! link SneakStreakStatusLine Search
 
-" }}}
-" Indent Guides: {{{
-
-if !exists('g:indent_guides_auto_colors')
-  let g:indent_guides_auto_colors = 0
-endif
-
-if g:indent_guides_auto_colors == 0
-  if g:materialbox_invert_indent_guides == 0
-    call s:HL('IndentGuidesOdd', s:vim_bg, s:bg2)
-    call s:HL('IndentGuidesEven', s:vim_bg, s:bg1)
-  else
-    call s:HL('IndentGuidesOdd', s:vim_bg, s:bg2, s:inverse)
-    call s:HL('IndentGuidesEven', s:vim_bg, s:bg3, s:inverse)
-  endif
-endif
-
-" }}}
-" IndentLine: {{{
+" 
+" IndentLine: 
 
 if !exists('g:indentLine_color_term')
   let g:indentLine_color_term = s:bg2[1]
@@ -688,8 +671,8 @@ if !exists('g:indentLine_color_gui')
   let g:indentLine_color_gui = s:bg2[0]
 endif
 
-" }}}
-" Rainbow Parentheses: {{{
+" 
+" Rainbow Parentheses: 
 
 if !exists('g:rbpt_colorpairs')
   let g:rbpt_colorpairs =
@@ -715,29 +698,29 @@ endif
 let g:niji_dark_colours = g:rbpt_colorpairs
 let g:niji_light_colours = g:rbpt_colorpairs
 
-"}}}
-" GitGutter: {{{
+
+" GitGutter: 
 
 hi! link GitGutterAdd materialboxGreenSign
 hi! link GitGutterChange materialboxAquaSign
 hi! link GitGutterDelete materialboxRedSign
 hi! link GitGutterChangeDelete materialboxAquaSign
 
-" }}}
-" GitCommit: "{{{
+" 
+" GitCommit: 
 
 hi! link gitcommitSelectedFile materialboxGreen
 hi! link gitcommitDiscardedFile materialboxRed
 
-" }}}
-" Signify: {{{
+" 
+" Signify: 
 
 hi! link SignifySignAdd materialboxGreenSign
 hi! link SignifySignChange materialboxAquaSign
 hi! link SignifySignDelete materialboxRedSign
 
-" }}}
-" Syntastic: {{{
+" 
+" Syntastic: 
 
 call s:HL('SyntasticError', s:none, s:none, s:undercurl, s:red)
 call s:HL('SyntasticWarning', s:none, s:none, s:undercurl, s:yellow)
@@ -745,8 +728,8 @@ call s:HL('SyntasticWarning', s:none, s:none, s:undercurl, s:yellow)
 hi! link SyntasticErrorSign materialboxRedSign
 hi! link SyntasticWarningSign materialboxYellowSign
 
-" }}}
-" Signature: {{{
+" 
+" Signature: 
 
 hi! link SignatureMarkerText materialboxPurpleSign
 hi! link SignatureMarkText materialboxBlueSign
@@ -754,16 +737,16 @@ hi! link SignatureMarkText materialboxBlueSign
 let g:SignatureMarkerTextHL='"SignatureMarkerText"'
 let g:SignatureMarkTextHL='"SignatureMarkText"'
 
-" }}}
-" ShowMarks: {{{
+" 
+" ShowMarks: 
 
 hi! link ShowMarksHLl materialboxBlueSign
 hi! link ShowMarksHLu materialboxBlueSign
 hi! link ShowMarksHLo materialboxBlueSign
 hi! link ShowMarksHLm materialboxBlueSign
 
-" }}}
-" CtrlP: {{{
+" 
+" CtrlP: 
 
 hi! link CtrlPMatch materialboxYellow
 hi! link CtrlPNoEntries materialboxRed
@@ -775,8 +758,8 @@ call s:HL('CtrlPMode1', s:blue, s:bg2, s:bold)
 call s:HL('CtrlPMode2', s:bg0, s:blue, s:bold)
 call s:HL('CtrlPStats', s:fg4, s:bg2, s:bold)
 
-" }}}
-" Startify: {{{
+" 
+" Startify: 
 
 hi! link StartifyBracket materialboxFg3
 hi! link StartifyFile materialboxFg0
@@ -788,8 +771,8 @@ hi! link StartifySpecial materialboxBg2
 hi! link StartifyHeader materialboxOrange
 hi! link StartifyFooter materialboxBg2
 
-" }}}
-" Vimshell: {{{
+" 
+" Vimshell: 
 
 let g:vimshell_escape_colors = [
   \ s:bg4[0], s:red[0], s:green[0], s:yellow[0],
@@ -798,10 +781,10 @@ let g:vimshell_escape_colors = [
   \ s:blue[0], s:purple[0], s:aqua[0], s:fg0[0]
   \ ]
 
-" }}}
+" 
 
 " Filetype specific -----------------------------------------------------------
-" Diff: {{{
+" Diff: 
 
 hi! link diffAdded materialboxGreen
 hi! link diffRemoved materialboxRed
@@ -812,8 +795,8 @@ hi! link diffNewFile materialboxYellow
 
 hi! link diffLine materialboxBlue
 
-" }}}
-" Html: {{{
+" 
+" Html: 
 
 hi! link htmlTag materialboxBlue
 hi! link htmlEndTag materialboxBlue
@@ -838,8 +821,8 @@ call s:HL('htmlUnderline', s:vim_fg, s:vim_bg, s:underline)
 call s:HL('htmlUnderlineItalic', s:vim_fg, s:vim_bg, s:underline . s:italic)
 call s:HL('htmlItalic', s:vim_fg, s:vim_bg, s:italic)
 
-" }}}
-" Xml: {{{
+" 
+" Xml: 
 
 hi! link xmlTag materialboxBlue
 hi! link xmlEndTag materialboxBlue
@@ -862,8 +845,8 @@ hi! link xmlAttribPunct materialboxGray
 
 hi! link xmlEntity materialboxOrange
 hi! link xmlEntityPunct materialboxOrange
-" }}}
-" Vim: {{{
+" 
+" Vim: 
 
 call s:HL('vimCommentTitle', s:fg4_256, s:none, s:bold . s:italicize_comments)
 
@@ -875,8 +858,8 @@ hi! link vimSetSep materialboxFg3
 hi! link vimSep materialboxFg3
 hi! link vimContinue materialboxFg3
 
-" }}}
-" Clojure: {{{
+" 
+" Clojure: 
 
 hi! link clojureKeyword materialboxBlue
 hi! link clojureCond materialboxOrange
@@ -905,14 +888,14 @@ hi! link clojureDeref materialboxYellow
 hi! link clojureQuote materialboxYellow
 hi! link clojureUnquote materialboxYellow
 
-" }}}
-" C: {{{
+" 
+" C: 
 
 hi! link cOperator materialboxPurple
 hi! link cStructure materialboxOrange
 
-" }}}
-" Python: {{{
+" 
+" Python: 
 
 hi! link pythonBuiltin materialboxOrange
 hi! link pythonBuiltinObj materialboxOrange
@@ -928,8 +911,8 @@ hi! link pythonExceptions materialboxPurple
 hi! link pythonBoolean materialboxPurple
 hi! link pythonDot materialboxFg3
 
-" }}}
-" CSS: {{{
+" 
+" CSS: 
 
 hi! link cssBraces materialboxBlue
 hi! link cssFunctionName materialboxYellow
@@ -963,8 +946,8 @@ hi! link cssRenderProp materialboxAqua
 hi! link cssColorProp materialboxAqua
 hi! link cssGeneratedContentProp materialboxAqua
 
-" }}}
-" JavaScript: {{{
+" 
+" JavaScript: 
 
 hi! link javaScriptBraces materialboxFg1
 hi! link javaScriptFunction materialboxAqua
@@ -974,8 +957,8 @@ hi! link javaScriptNumber materialboxPurple
 hi! link javaScriptNull materialboxPurple
 hi! link javaScriptParens materialboxFg3
 
-" }}}
-" YAJS: {{{
+" 
+" YAJS: 
 
 hi! link javascriptImport materialboxAqua
 hi! link javascriptExport materialboxAqua
@@ -1030,8 +1013,8 @@ hi! link javascriptDocNotation materialboxFg4
 hi! link javascriptDocParamType materialboxFg4
 hi! link javascriptDocNamedParamType materialboxFg4
 
-" }}}
-" CoffeeScript: {{{
+" 
+" CoffeeScript: 
 
 hi! link coffeeExtendedOp materialboxFg3
 hi! link coffeeSpecialOp materialboxFg3
@@ -1039,20 +1022,20 @@ hi! link coffeeCurly materialboxOrange
 hi! link coffeeParen materialboxFg3
 hi! link coffeeBracket materialboxOrange
 
-" }}}
-" Ruby: {{{
+" 
+" Ruby: 
 
 hi! link rubyStringDelimiter materialboxGreen
 hi! link rubyInterpolationDelimiter materialboxAqua
 
-" }}}
-" ObjectiveC: {{{
+" 
+" ObjectiveC: 
 
 hi! link objcTypeModifier materialboxRed
 hi! link objcDirective materialboxBlue
 
-" }}}
-" Go: {{{
+" 
+" Go: 
 
 hi! link goDirective materialboxAqua
 hi! link goConstants materialboxPurple
@@ -1060,23 +1043,23 @@ hi! link goDeclaration materialboxRed
 hi! link goDeclType materialboxBlue
 hi! link goBuiltins materialboxOrange
 
-" }}}
-" Lua: {{{
+" 
+" Lua: 
 
 hi! link luaIn materialboxRed
 hi! link luaFunction materialboxAqua
 hi! link luaTable materialboxOrange
 
-" }}}
-" MoonScript: {{{
+" 
+" MoonScript: 
 
 hi! link moonSpecialOp materialboxFg3
 hi! link moonExtendedOp materialboxFg3
 hi! link moonFunction materialboxFg3
 hi! link moonObject materialboxYellow
 
-" }}}
-" Java: {{{
+" 
+" Java: 
 
 hi! link javaAnnotation materialboxBlue
 hi! link javaDocTags materialboxAqua
@@ -1091,16 +1074,16 @@ hi! link javaOperator materialboxOrange
 
 hi! link javaVarArg materialboxGreen
 
-" }}}
-" Elixir: {{{
+" 
+" Elixir: 
 
 hi! link elixirDocString Comment
 
 hi! link elixirStringDelimiter materialboxGreen
 hi! link elixirInterpolationDelimiter materialboxAqua
 
-" }}}
-" Scala: {{{
+" 
+" Scala: 
 
 " NB: scala vim syntax file is kinda horrible
 hi! link scalaNameDefinition materialboxFg1
@@ -1120,8 +1103,8 @@ hi! link scalaTypeTypePostDeclaration materialboxYellow
 hi! link scalaInstanceDeclaration materialboxFg1
 hi! link scalaInterpolation materialboxAqua
 
-" }}}
-" Markdown: {{{
+" 
+" Markdown: 
 
 call s:HL('markdownItalic', s:fg3, s:none, s:italic)
 
@@ -1153,8 +1136,8 @@ hi! link markdownUrlTitleDelimiter materialboxGreen
 call s:HL('markdownLinkText', s:gray, s:none, s:underline)
 hi! link markdownIdDeclaration markdownLinkText
 
-" }}}
-" Haskell: {{{
+" 
+" Haskell: 
 
 " hi! link haskellType materialboxYellow
 " hi! link haskellOperators materialboxOrange
@@ -1187,19 +1170,19 @@ hi! link haskellPragma materialboxPurple
 hi! link haskellString materialboxGreen
 hi! link haskellChar materialboxGreen
 
-" }}}
-" Json: {{{
+" 
+" Json: 
 
 hi! link jsonKeyword materialboxGreen
 hi! link jsonQuote materialboxGreen
 hi! link jsonBraces materialboxFg1
 hi! link jsonString materialboxFg1
 
-" }}}
+" 
 
 
 " Functions -------------------------------------------------------------------
-" Search Highlighting Cursor {{{
+" Search Highlighting Cursor 
 
 function! MaterialboxHlsShowCursor()
   call s:HL('Cursor', s:bg0, s:hls_cursor)
@@ -1209,7 +1192,7 @@ function! MaterialboxHlsHideCursor()
   call s:HL('Cursor', s:none, s:none, s:inverse)
 endfunction
 
-" }}}
+" 
 
 " vim: set sw=2 ts=2 sts=2 et tw=80 ft=vim fdm=marker:
 

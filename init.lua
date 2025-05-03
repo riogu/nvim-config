@@ -118,10 +118,16 @@ if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.1
 end
 
+vim.api.nvim_create_autocmd('TextYankPost', {
+  callback = function()
+    vim.hl.on_yank()
+  end,
+})
 vim.cmd [[
 set cmdheight=0
 set t_Co=256
 syntax on
+set mouse=n
 " colorscheme materialbox
 " let g:sierra_Sunset = 1
 " let g:sierra_Twilight = 1
@@ -129,3 +135,31 @@ syntax on
 " let g:sierra_Pitch = 1
 colorscheme riogu-minimal
 ]]
+--  vim.api.nvim_create_autocmd("TextYankPost", {
+--
+-- desc = "Highlight when yanking (copying) text",
+--
+-- group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+--
+-- callback = function()
+--
+-- 	vim.highlight.on_yank()
+--
+-- end,
+--
+-- })
+
+
+-- vim.api.nvim_set_hl(0, "YankHighlight", { bg = "#ADD8E6", fg = "#0000FF" })
+--
+-- vim.api.nvim_create_autocmd("TextYankPost", {
+--
+-- desc = "Highlight when yanking (copying) text",
+--
+-- group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
+--
+-- callback = function()
+--
+-- vim.highlight.on_yank({ higroup = "YankHighlight", timeout = 300 })
+--
+-- end, 
