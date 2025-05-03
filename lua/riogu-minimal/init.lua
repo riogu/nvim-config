@@ -1,16 +1,20 @@
 local M = {}
 
 local p = {
-  variable_whiteish = '#6C7896',
+  variable_whiteish = '#7A8BB8',
   normal_text_gray = '#E7F2FC',
   soft_grey_highlight = '#3A4356',
   softer_grey_highlight = '#445069',
   even_softer_grey_highlight = '#5E6A83',
   even_even_softer_grey_highlight = '#6F7D9A',
   even_even_even_softer_grey_highlight = '#8899BE',
+  most_soft_grey_highlight = '#8897B6',
   variable_scope_color = '#CDD4E8',
 
-  gold_yellow = '#FDCA4F',
+  global_blue = '#567CC6',
+  global_red = '#e35c5c',
+
+  gold_yellow = '#FCBF55',
   dark_green = '#5C898B',
   string_green = '#589A8F',
   struct_strong_blue = '#A7B3EC',
@@ -29,7 +33,8 @@ local p = {
   gruber_darker_bg = '#66677D',
   -- gruber_darker_bg = '#3C3C4D',
   gruber_darker_niagara = '#96a6c8',
-  function_name_blue = '#87BBC9',
+  function_name_blue = '#94B3E2',
+  macro_green = '#5ABCAC',
   gruber_darker_niagara_dark = '#384052',
   gruber_darker_wisteria = '#5C76CB',
   gruber_darker_green_custom = '#369432',
@@ -43,7 +48,7 @@ local p = {
 
   -- Blacks. Not in base Nord.
   black0 = '#191D24',
-  background_color = '#252B3A',
+  background_color = '#292D35',
   -- Slightly darker than bg.  Very useful for certain popups
   black2 = '#222630',
 
@@ -127,7 +132,7 @@ local highlight_groups = {
   IncSearch = { fg = p.variable_whiteish, bg = p.gruber_darker_niagara_m1 },
   Search = { link = 'IncSearch' },
   Substitute = { link = 'IncSearch' },
-  MatchParen = { fg = 'NONE' },
+  MatchParen = { fg = 'NONE', bg = p.soft_grey_highlight },
   ModeMsg = { link = 'Normal' },
   MoreMsg = { link = 'Normal' },
   WarningMsg = { link = 'Normal' },
@@ -138,6 +143,7 @@ local highlight_groups = {
   LineNrBelow = { link = 'LineNr' },
   CursorLine = { fg = 'NONE', bg = p.soft_grey_highlight },
   CursorLineNr = { fg = p.gold_yellow, bg = 'NONE' },
+  Cursor = { bg = p.variable_scope_color },
   StatusLine = { fg = p.gold_yellow, bg = '#313645' },
   StatusLineNC = { fg = p.even_even_softer_grey_highlight, bg = 'NONE' },
   WinSeparator = { fg = p.soft_grey_highlight, bg = 'NONE' },
@@ -173,12 +179,12 @@ local highlight_groups = {
   Function = { fg = p.function_name_blue },
   Identifier = { fg = p.variable_whiteish },
   Include = { link = 'PreProc' },
-  Keyword = { fg = p.function_name_blue }, -- for loops and if statements (lmao)
+  Keyword = { fg = p.variable_whiteish }, -- for loops and if statements (lmao)
   Label = { link = 'String' },
   Number = { fg = '#E0B4BB' },
   Float = { link = 'Number' },
-  Operator = { fg = p.even_even_even_softer_grey_highlight },
-  PreProc = { fg = '#e35c5c' },
+  Operator = { fg = p.most_soft_grey_highlight },
+  PreProc = { fg = p.global_blue },
 
   -- Repeat = { fg = p.parameter_white, bg = p.normal_text_gray },
   Special = { fg = p.gold_yellow },
@@ -227,9 +233,13 @@ local highlight_groups = {
   ['@lsp.type.variable.cpp'] = { fg = p.variable_scope_color },
   ['@lsp.type.enumMember'] = { fg = p.string_green },
   ['@lsp.type.interface'] = { fg = p.gold_yellow },
-  ['@lsp.typemod.variable.globalScope.cpp'] = { fg = '#e35c5c' },
-  ['@lsp.type.macro'] = { fg = '#e35c5c' },
-  -- ['@lsp.mod.readonly.cpp'] = { fg = '#44588B' },
+  ['@lsp.typemod.variable.globalScope.cpp'] = { fg = p.global_blue },
+  ['@lsp.typemod.property.classScope.cpp'] = { fg = p.variable_whiteish },
+  ['@lsp.type.macro'] = { fg = p.macro_green },
+  ['@keyword.modifier.cpp'] = { fg = '#E49E73' },
+  ['@punctuation.bracket.cpp'] = { bg = 'NONE', fg = p.most_soft_grey_highlight },
+  ['@keyword.import.cpp'] = { fg = p.global_blue },
+  -- ['@lsp.mod.readonly.cpp'] = { fg = '#44588B' },,
   -- ['@lsp.mod.functionScope.cpp'] = { fg = p.even_softer_grey_highlight },
   -- Java
   ['javaStatement'] = { link = 'Keyword' },
