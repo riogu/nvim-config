@@ -64,6 +64,7 @@ vim.opt.scrolloff = 2
 --Lua:
 -- vim: ts=2 sts=2 sw=2 et
 vim.opt['tabstop'] = 4
+
 -- -- This module contains a number of default definitions
 -- dev = {
 --   ---@type string | fun(plugin: LazyPlugin): string directory where you store your local plugin projects

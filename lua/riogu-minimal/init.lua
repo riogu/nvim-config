@@ -1,8 +1,12 @@
 local M = {}
 
 local p = {
+  background_color = '#2F333C',
+
+  const_orange = '#FF9A5C',
   variable_whiteish = '#7A8BB8',
   lighter_variable_whiteish = '#97A7D2',
+  class_struct_blue = '#8EA3D9',
   normal_text_gray = '#E7F2FC',
   soft_grey_highlight = '#3A4356',
   softer_grey_highlight = '#445069',
@@ -20,7 +24,7 @@ local p = {
   dark_green = '#5C898B',
   string_green = '#589A8F',
   struct_strong_blue = '#A7B3EC',
-  directory_color = '#5C898B',
+  directory_color = '#7EA8FF',
   parameter_orangeish = '#5E80B7',
   stronger_directory_color = '#78B7D7',
 
@@ -35,7 +39,7 @@ local p = {
   gruber_darker_bg = '#66677D',
   -- gruber_darker_bg = '#3C3C4D',
   gruber_darker_niagara = '#96a6c8',
-  function_name_blue = '#94B3E2',
+  function_name_blue = '#9CD1FF',
   macro_green = '#5ABCAC',
   gruber_darker_niagara_dark = '#384052',
   gruber_darker_wisteria = '#5C76CB',
@@ -50,7 +54,6 @@ local p = {
 
   -- Blacks. Not in base Nord.
   black0 = '#191D24',
-  background_color = '#292D35',
   -- Slightly darker than bg.  Very useful for certain popups
   black2 = '#222630',
 
@@ -130,19 +133,25 @@ local highlight_groups = {
   Italic = { italic = true },
   Underlined = { undercurl = true },
   Visual = { bg = p.soft_grey_highlight, fg = 'NONE' },
-  Directory = { fg = p.function_name_blue, bold = true },
+  Directory = { fg = p.directory_color, bold = true },
   IncSearch = { fg = 'NONE', bg = p.even_softer_grey_highlight }, -- yanking color
   Search = { link = 'IncSearch' },
   Substitute = { link = 'IncSearch' },
   MatchParen = { fg = 'NONE', bg = p.soft_grey_highlight },
   ModeMsg = { link = 'Normal' },
   MoreMsg = { link = 'Normal' },
-  WarningMsg = { link = 'Normal' },
+  WarningMsg = { fg = p.gold_yellow },
   FloatBorder = { fg = p.even_softer_grey_highlight, bg = 'NONE' },
   NonText = { link = 'Normal' },
   LineNr = { bg = p.background_color, fg = p.soft_grey_highlight },
   LineNrAbove = { link = 'LineNr' },
   LineNrBelow = { link = 'LineNr' },
+  qfText = { fg = '#C29C6D' },
+  DiagnosticVirtualTextError = { bg = 'none', fg = '#B9545E' },
+  DiagnosticVirtualTextHint = { bg = 'none', fg = '#AB977F' },
+  DiagnosticVirtualTextInfo = { bg = 'none', fg = '#AB977F' },
+  DiagnosticVirtualTextWarn = { bg = 'none', fg = '#AB977F' },
+
   CursorLine = { fg = 'NONE', bg = p.soft_grey_highlight },
   CursorLineNr = { fg = p.gold_yellow, bg = 'NONE' },
   Cursor = { bg = p.variable_scope_color },
@@ -199,14 +208,14 @@ local highlight_groups = {
   -- Syntax
   Boolean = { fg = p.soft_pinkish },
   Character = { link = 'String' },
-  Comment = { fg = p.softer_grey_highlight },
+  Comment = { fg = p.even_softer_grey_highlight },
   Constant = { fg = p.dark_green },
   Define = { bg = p.even_softer_grey_highlight },
   Delimiter = { fg = p.greyish_green_riogu }, --colons and double dots
   Function = { fg = p.function_name_blue },
   Identifier = { fg = p.variable_whiteish },
   Include = { link = 'PreProc' },
-  Keyword = { fg = p.lighter_variable_whiteish }, -- for loops and if statements (lmao)
+  Keyword = { fg = p.class_struct_blue }, -- for loops and if statements (lmao)
   Label = { link = 'String' },
   Number = { fg = '#E0B4BB' },
   Float = { bg = p.almost_background_color },
@@ -222,7 +231,7 @@ local highlight_groups = {
   StorageClass = { fg = p.lighter_variable_whiteish },
   String = { fg = p.string_green },
   Structure = { fg = p.function_name_blue },
-  Variable = { fg = p.even_even_even_softer_grey_highlight },
+  Variable = { fg = p.variable_scope_color },
   Tag = { link = 'SpecialChar' },
   Todo = { fg = p.todo_fg, bg = p.todo_bg },
   Type = { fg = p.gold_yellow },
@@ -254,17 +263,21 @@ local highlight_groups = {
   ['@conditional'] = { link = 'Conditional' },
   ['@exception'] = { link = 'Exception' },
   ['@lsp.type.namespace'] = { fg = p.gold_yellow },
-  ['@lsp.type.typeParameter'] = { fg = p.soft_pinkish },
+  ['@lsp.type.parameter.cpp'] = { fg = '#41A695' },
+  ['@lsp.typemod.parameter.declaration.cpp'] = { fg = p.variable_scope_color },
   -- LSP
   -- ['@lsp.type.class.cpp'] = { fg = p.function_name_blue },
-  ['@lsp.type.parameter'] = { fg = p.soft_pinkish },
-  ['@lsp.type.variable.cpp'] = { fg = p.variable_scope_color },
   ['@lsp.type.enumMember'] = { fg = p.string_green },
   ['@lsp.type.interface'] = { fg = p.gold_yellow },
   ['@lsp.typemod.variable.globalScope.cpp'] = { fg = p.global_blue },
-  ['@lsp.typemod.property.classScope.cpp'] = { fg = p.variable_whiteish },
+  -- ['@lsp.mod.classScope.cpp'] = { fg = p.variable_whiteish },
+
+  ['@lsp.type.method.cpp'] = { fg = p.function_name_blue },
+  -- ['@lsp.type.property.cpp'] = {fg = }
+
+  ['@lsp.typemod.property.declaration.cpp'] = { fg = p.variable_scope_color },
   ['@lsp.type.macro'] = { fg = p.macro_green },
-  ['@keyword.modifier.cpp'] = { fg = '#E49E73' },
+  ['@keyword.modifier.cpp'] = { fg = p.class_struct_blue },
   -- ['@punctuation.bracket.cpp'] = { fg = p.variable_whiteish },
   ['@keyword.import.cpp'] = { fg = p.global_blue },
   ExtraWhiteSpace = { bg = 'NONE' },

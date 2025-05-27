@@ -127,7 +127,7 @@ vim.cmd [[
 set cmdheight=0
 set t_Co=256
 syntax on
-set mouse=n
+set mouse=a
 " colorscheme materialbox
 " let g:sierra_Sunset = 1
 " let g:sierra_Twilight = 1
@@ -146,7 +146,8 @@ colorscheme riogu-minimal
 -- 	vim.highlight.on_yank()
 --
 -- end,
---
+
+vim.diagnostic.config { virtual_text = true }
 -- })
 
 -- vim.api.nvim_set_hl(0, "YankHighlight", { bg = "#ADD8E6", fg = "#0000FF" })

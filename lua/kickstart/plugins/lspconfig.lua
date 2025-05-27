@@ -38,7 +38,6 @@ return {
       --  - Autocompletion
       --  - Symbol Search
       --  - and more!
-      --
       -- Thus, Language Servers are external tools that must be installed separately from
       -- Neovim. This is where `mason` and related plugins come into play.
       --
@@ -166,11 +165,13 @@ return {
             '--header-insertion=never',
             '--function-arg-placeholders=0',
           },
-          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto', 'h', 'hpp' },
         },
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        -- rust_analyzer = {
+        --
+        -- },
         -- ruff = {
         --   opts = {
         -- autoformat = false,

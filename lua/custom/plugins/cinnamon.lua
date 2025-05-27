@@ -37,6 +37,12 @@ return {
   keys = {
     { '<c-d>', '<cmd>lua require("cinnamon").scroll("<C-d>zz")<cr>', mode = 'n' },
     { '<c-u>', '<cmd>lua require("cinnamon").scroll("<C-u>zz")<cr>', mode = 'n' },
+
+    -- { '<c-down>', '<cmd>lua require("cinnamon").scroll("<C-d>zz")<cr>', mode = 'n' },
+    -- { '<c-up>', '<cmd>lua require("cinnamon").scroll("<C-u>zz")<cr>', mode = 'n' },
+
+    -- { '<Tab><down>', '<cmd>lua require("cinnamon").scroll("<C-d>zz")<cr>', mode = 'n' },
+    -- { '<Tab><up>', '<cmd>lua require("cinnamon").scroll("<C-u>zz")<cr>', mode = 'n' },
     -- kyun da kyun says: I am assuming that you're not actually using these
     -- { '<c-f>', '<cmd>lua require("cinnamon").scroll("<C-f>zz")<cr>', mode = 'n' },
     -- { '<c-b>', '<cmd>lua require("cinnamon").scroll("<C-b>zz")<cr>', mode = 'n' },

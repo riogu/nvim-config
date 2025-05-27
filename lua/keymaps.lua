@@ -55,7 +55,7 @@ vim.keymap.set('n', '<space>fb', ':Telescope file_browser path=%:p:h select_buff
 -- vim: ts=2 sts=2 sw=2 et
 -- vim.keymap.del('n', '<C-f>')
 
-vim.keymap.set({ 'n', 'i' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file with ctrl s' })
+vim.keymap.set({ 'n' }, 's', '<cmd>w<CR>', { remap = true, desc = 'Save file with ctrl s' })
 vim.keymap.set({ 'n', 'i', 'v' }, 'º', '<Esc>', { remap = true, silent = true, desc = 'leave insert mode' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope find_files cwd=~/.config/nvim<CR>', { desc = 'Find in config' })
 -- vim.keymap.set('n', '<leader>e', cmd ':Oil', { desc = 'Find files or something' })
@@ -118,6 +118,15 @@ map('n', 'w<left>', '<c-w>h', { desc = 'Go left' })
 map('n', 'w<right>', '<c-w>l', { desc = 'Go right' })
 map('n', 'w<up>', '<c-w>k', { desc = 'Go up' })
 map('n', 'w<down>', '<c-w>j', { desc = 'Go down' })
+-- new mappings eeeeee
+-- map('n', '<c-left>', '<c-w>h', { desc = 'Go left' })
+-- map('n', '<c-right>', '<c-w>l', { desc = 'Go right' })
+-- vim.keymap.set('n', '<Tab>', '<Nop>')
+-- map('n', '<c-down>', '<c-d>', { desc = 'Go down' })
+-- map('n', '<c-up>', '<c-u>', { desc = 'Go up' })
+
+-- map('n', '<Tab><down>', '<c-d>', { desc = 'Go down' })
+-- map('n', '<Tab><up>', '<c-u>', { desc = 'Go up' })
 
 -- vim.keymap.set('i', '<c-f>', "<Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR", { desc="create inkscape figure", silent = true, noremap = true })
 -- inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR
