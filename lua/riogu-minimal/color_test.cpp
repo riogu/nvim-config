@@ -3,8 +3,6 @@
 #include "fumo_engine/components.hpp"
 #include "fumo_engine/core/fumo_engine.hpp"
 
-#define MACRO(x) ##x = 3213123123;
-
 struct Body {
     template<typename T>
     void get_component() {}

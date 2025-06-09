@@ -21,7 +21,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 --
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
--- vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -33,6 +33,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
+
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
@@ -113,6 +114,11 @@ map('n', 'wH', '<c-w>H', { desc = 'GO LEFT' })
 map('n', 'wL', '<c-w>L', { desc = 'GO RIGHT' })
 map('n', 'wK', '<c-w>K', { desc = 'GO UP' })
 map('n', 'wJ', '<c-w>J', { desc = 'GO DOWN' })
+
+-- terminal mode shorcuts and stuff
+-- vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
+map('n', 'wt', '<cmd>terminal<CR>', { desc = 'Go left' })
+
 -- map('n', 'wo', '<c-w>o', { desc = 'Close all other windows' })
 map('n', 'w<left>', '<c-w>h', { desc = 'Go left' })
 map('n', 'w<right>', '<c-w>l', { desc = 'Go right' })

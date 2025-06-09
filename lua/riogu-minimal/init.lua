@@ -148,9 +148,9 @@ local highlight_groups = {
   LineNrBelow = { link = 'LineNr' },
   qfText = { fg = '#C29C6D' },
   DiagnosticVirtualTextError = { bg = 'none', fg = '#B9545E' },
-  DiagnosticVirtualTextHint = { bg = 'none', fg = '#AB977F' },
-  DiagnosticVirtualTextInfo = { bg = 'none', fg = '#AB977F' },
-  DiagnosticVirtualTextWarn = { bg = 'none', fg = '#AB977F' },
+  DiagnosticVirtualTextHint = { bg = 'none', fg = p.global_blue },
+  DiagnosticVirtualTextInfo = { bg = 'none', fg = p.global_blue },
+  DiagnosticVirtualTextWarn = { bg = 'none', fg = p.global_blue },
 
   CursorLine = { fg = 'NONE', bg = p.soft_grey_highlight },
   CursorLineNr = { fg = p.gold_yellow, bg = 'NONE' },
@@ -300,8 +300,10 @@ local highlight_groups = {
   ['@lsp.typemod.property.defaultLibrary.javascript'] = { fg = p.gruber_darker_quartz },
   ['@lsp.typemod.member.defaultLibrary.javascript'] = { fg = p.gruber_darker_niagara },
   -- Markdown
-  -- ['markdownCodeBlock'] = { link = 'String' },
-  -- ['@markup.raw.block.markdown'] = { bg = 'NONE' },
+  ['markdownCodeBlock'] = { link = 'String' },
+  ['@markup.raw.block.markdown'] = { bg = 'NONE', fg = p.variable_scope_color },
+  ['@spell.markdown'] = { bg = 'NONE', fg = p.variable_whiteish },
+  ['@markup.heading.2.markdown'] = { fg = p.gold_yellow, bg = 'NONE' },
   -- Diff
   DiffAdd = { fg = 'NONE', bg = p.gruber_darker_green_custom_m1 },
   DiffAdded = { fg = p.gruber_darker_green_custom, bg = 'NONE' },
