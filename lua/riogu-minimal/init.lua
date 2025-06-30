@@ -303,7 +303,8 @@ local highlight_groups = {
   ['markdownCodeBlock'] = { link = 'String' },
   ['@markup.raw.block.markdown'] = { bg = 'NONE', fg = p.variable_scope_color },
   ['@spell.markdown'] = { bg = 'NONE', fg = p.variable_whiteish },
-  ['@markup.heading.2.markdown'] = { fg = p.gold_yellow, bg = 'NONE' },
+  ['RenderMarkdownCode'] = { fg = 'NONE' },
+  -- ['@markup.heading.2.markdown'] = { fg = p.gold_yellow, bg = 'NONE' },
   -- Diff
   DiffAdd = { fg = 'NONE', bg = p.gruber_darker_green_custom_m1 },
   DiffAdded = { fg = p.gruber_darker_green_custom, bg = 'NONE' },
