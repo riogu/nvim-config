@@ -161,9 +161,13 @@ return {
         clangd = {
           autoformat = false,
           cmd = {
-            'clangd',
-            '--header-insertion=never',
-            '--function-arg-placeholders=0',
+            'clangd --header-insertion=never',
+            -- '--background-index',
+            -- '--clang-tidy',
+            -- '--completion-style=detailed',
+            -- '--function-arg-placeholders',
+            -- '--fallback-style=llvm',
+            -- '--header-insertion=never',
           },
           filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto', 'h', 'hpp' },
         },

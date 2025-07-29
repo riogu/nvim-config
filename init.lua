@@ -95,6 +95,7 @@ vim.g.have_nerd_font = true
 -- vim.g.did_load_netrw = 1
 vim.g.netrw_banner = 0
 vim.g.command_height = 0
+vim.o.swapfile = false
 -- [[ Setting options ]]
 require 'options'
 -- [[ Basic Keymaps ]]
@@ -118,11 +119,13 @@ if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.1
 end
 
+
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
     vim.hl.on_yank()
   end,
 })
+-- vim.o.winborder = "rounded"
 vim.cmd [[
 set cmdheight=0
 set t_Co=256
