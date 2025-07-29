@@ -95,6 +95,8 @@ vim.g.have_nerd_font = true
 -- vim.g.did_load_netrw = 1
 vim.g.netrw_banner = 0
 vim.g.command_height = 0
+vim.o.expandtab = true
+vim.o.shiftwidth=4
 vim.o.swapfile = false
 -- [[ Setting options ]]
 require 'options'
