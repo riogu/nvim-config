@@ -49,7 +49,7 @@ vim.opt.splitbelow = true
 --  and `:help 'listchars'`
 vim.opt.list = true
 -- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-vim.opt.listchars = { trail = ' ', tab = '>-', nbsp = '␣' }
+vim.opt.listchars = { trail = ' ', tab = '  ', nbsp = '␣' }
 
 -- vim.opt.wrap = false
 

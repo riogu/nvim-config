@@ -244,13 +244,19 @@ return {
   -- },
   { 'wakatime/vim-wakatime', lazy = false },
   { 'akinsho/toggleterm.nvim', version = '*', config = true },
-  {
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
-    config = true,
-    -- use opts = {} for passing setup options
-    -- this is equivalent to setup({}) function
-  },
+  -- {
+  -- 'windwp/nvim-autopairs',
+  -- event = 'InsertEnter',
+  -- -- Optional dependency
+  -- dependencies = { 'hrsh7th/nvim-cmp' },
+  -- config = function()
+  --   require('nvim-autopairs').remove_rule('"') -- remove rule (
+  --   -- If you want to automatically add `(` after selecting a function or method
+  --   local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
+  --   local cmp = require 'cmp'
+  --   cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+  -- end,
+  -- },
   -- {
   --   'nvim-lualine/lualine.nvim',
   --   dependencies = { 'nvim-tree/nvim-web-devicons' },

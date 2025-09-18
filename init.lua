@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
-
+vim.o.wrap = false
 -- vim.g.did_load_netrw = 1
 vim.g.netrw_banner = 0
 vim.g.command_height = 0
@@ -120,6 +120,7 @@ if vim.g.neovide then
   vim.g.neovide_hide_mouse_when_typing = true
   vim.g.neovide_scroll_animation_length = 0.1
 end
+
 
 
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -152,6 +153,10 @@ colorscheme riogu-minimal
 --
 -- end,
 
+
+vim.filetype.add({
+  extension = { fm = "rs" },
+})
 vim.diagnostic.config { virtual_text = true }
 -- })
 

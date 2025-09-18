@@ -62,6 +62,12 @@ return {
         --   },
         -- },
         defaults = {
+          file_ignore_patterns = {
+            "%.cache/.*",
+            "%.git/.*",
+            "build/.*",
+            "docs/.*",
+          },
           preview = {
             mime_hook = function(filepath, bufnr, opts)
               local is_image = function(filepath)
@@ -128,7 +134,7 @@ return {
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      -- vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
@@ -152,11 +158,11 @@ return {
       --     previewer = false,
       --   })
       -- end, { remap = true, silent = true, desc = '[/] Fuzzily search in current buffer' })
-      vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
-        }
+      vim.keymap.set('n', 'sg', function()
+        builtin.live_grep(require('telescope.themes').get_dropdown {
+          winblend = 10,
+          previewer = true,
+        })
       end, { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
