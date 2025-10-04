@@ -1,7 +1,6 @@
 return {
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
-
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
@@ -158,19 +157,6 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {
-          autoformat = false,
-          cmd = {
-            'clangd --header-insertion=never',
-            -- '--background-index',
-            -- '--clang-tidy',
-            -- '--completion-style=detailed',
-            -- '--function-arg-placeholders',
-            -- '--fallback-style=llvm',
-            -- '--header-insertion=never',
-          },
-          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto', 'h', 'hpp' },
-        },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {
@@ -224,6 +210,7 @@ return {
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
+        automatic_installation = false, -- Disable auto-install
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -234,6 +221,30 @@ return {
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+      -- After mason-lspconfig.setup, add:
+      require('lspconfig').clangd.setup {
+        autostart = false,
+        capabilities = capabilities,
+        cmd = {
+          'clangd',
+          '--header-insertion=never',
+          '--limit-results=50',
+          '--pch-storage=memory',
+          '--clang-tidy=false',
+          '--completion-parse=auto',
+          '--j=4',
+        },
+        init_options = {
+          clangdFileStatus = false,
+        },
+        on_attach = function(client, bufnr)
+          local size = vim.fn.getfsize(vim.fn.expand '%')
+          if size > 100000 then
+            client.server_capabilities.semanticTokensProvider = nil
+          end
+        end,
+        filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto', 'h', 'hpp' },
       }
     end,
   },

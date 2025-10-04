@@ -173,3 +173,17 @@ vim.diagnostic.config { virtual_text = true }
 -- vim.highlight.on_yank({ higroup = "YankHighlight", timeout = 300 })
 --
 -- end,
+-- In your init.lua
+
+-- Only map ctags shortcuts if no LSP client is attached
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function()
+    -- Check if any LSP client is attached to current buffer
+    if #vim.lsp.get_active_clients({ bufnr = 0 }) == 0 then
+      -- No LSP, use ctags
+      vim.keymap.set('n', 'gd', '<C-]>', { buffer = true, desc = 'Go to definition (ctags)' })
+      vim.keymap.set('n', 'gr', ':ts <C-R><C-W><CR>', { buffer = true, desc = 'Show tags' })
+    end
+  end,
+})
+

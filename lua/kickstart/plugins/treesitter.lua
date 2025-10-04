@@ -4,32 +4,46 @@ return {
     build = ':TSUpdate',
     opts = {
       ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
         enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
+        disable = function(lang, buf)
+          local max_filesize = 2 * 1024 * 1024 -- 2 MB
+          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+          if ok and stats and stats.size > max_filesize then
+            return true
+          end
+        end,
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = {
+        enable = true,
+        disable = function(lang, buf)
+          -- Disable indent for large files - this is expensive
+          local line_count = vim.api.nvim_buf_line_count(buf)
+          if line_count > 10000 then
+            return true
+          end
+          return lang == 'ruby'
+        end,
+      },
     },
     config = function(_, opts)
-      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-
-      -- Prefer git instead of curl in order to improve connectivity in some environments
       require('nvim-treesitter.install').prefer_git = true
-      ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 
-      -- There are additional nvim-treesitter modules that you can use to interact
-      -- with nvim-treesitter. You should go explore a few and see what interests you:
-      --
-      --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-      --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+      -- Performance tweaks for large files
+      vim.api.nvim_create_autocmd('BufReadPre', {
+        callback = function()
+          local line_count = vim.api.nvim_buf_line_count(0)
+          if line_count > 10000 then
+            -- Keep syntax but disable expensive features
+            vim.opt_local.foldmethod = 'manual'
+            vim.opt_local.foldexpr = ''
+            vim.opt_local.syntax = 'on'
+          end
+        end,
+      })
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et

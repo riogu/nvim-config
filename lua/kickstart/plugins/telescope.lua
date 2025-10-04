@@ -65,8 +65,7 @@ return {
           file_ignore_patterns = {
             "%.cache/.*",
             "%.git/.*",
-            "build/.*",
-            "docs/.*",
+            -- "build/.*",
           },
           preview = {
             mime_hook = function(filepath, bufnr, opts)
@@ -139,6 +138,8 @@ return {
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>ft', '<cmd>Telescope tags<cr>', { desc = 'Find tags' })
+      vim.keymap.set('n', '<leader>fT', '<cmd>Telescope current_buffer_tags<cr>', { desc = 'Find buffer tags' })
 
       -- Slightly advanced example of overriding default behavior and theme
 

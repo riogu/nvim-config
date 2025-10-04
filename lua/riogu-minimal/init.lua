@@ -218,7 +218,7 @@ local highlight_groups = {
   Keyword = { fg = p.class_struct_blue }, -- for loops and if statements (lmao)
   Label = { link = 'String' },
   Number = { fg = '#E0B4BB' },
-  Float = { bg = p.almost_background_color },
+  Float = { link = 'Number' },
   Operator = { fg = p.most_soft_grey_highlight },
   PreProc = { fg = p.global_blue },
 
