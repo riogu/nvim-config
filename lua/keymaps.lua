@@ -72,6 +72,19 @@ local map = vim.keymap.set
 -- Same thing but for different terminals
 map({ 'i', 't' }, '<C-BS>', '<C-w>', { desc = 'Delete word' })
 map({ 'i', 't' }, '<C-h>', '<C-w>', { desc = 'Delete word' })
+-- map({ 'i', 't' }, '<C-H>', '<C-w>', { desc = 'Delete word' })
+-- Simulate deleting word with actual backspaces
+map('i', '<C-h>', function()
+  local col = vim.fn.col('.')
+  local line = vim.fn.getline('.')
+  local before = line:sub(1, col - 1)
+  local word_start = before:match('.*%s()%S*$') or before:match('^()%S*$') or col
+  local delete_count = col - word_start
+  for _ = 1, delete_count do
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<BS>', true, false, true), 'n', false)
+  end
+end, { desc = 'Delete word' })
+
 -- Window Management
 map('n', '<leader>wv', '<c-w>v', { desc = 'Split window vertically' })
 map('n', '<leader>ws', '<c-w>s', { desc = 'Split window horizontally' })
