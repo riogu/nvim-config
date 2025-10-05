@@ -226,11 +226,12 @@ local highlight_groups = {
   Special = { fg = p.gold_yellow },
   SpecialChar = { link = 'String' },
   SpecialComment = { link = 'SpecialChar' },
-  SpecialKey = { link = 'Special' },
+  SpecialKey = { fg = p.even_softer_grey_highlight }, -- Change here
   Statement = { link = 'Type' },
   StorageClass = { fg = p.lighter_variable_whiteish },
   String = { fg = p.string_green },
   Structure = { fg = p.function_name_blue },
+  LogPath = { fg = p.variable_whiteish},
   Variable = { fg = p.variable_scope_color },
   Tag = { link = 'SpecialChar' },
   Todo = { fg = p.todo_fg, bg = p.todo_bg },
