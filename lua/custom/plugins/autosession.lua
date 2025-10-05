@@ -6,7 +6,7 @@ return {
     auto_save = true,
     auto_restore = false,
     auto_create = true,
-    suppressed_dirs = { '~/', '~/Downloads', '/' },
+    suppressed_dirs = { '~/', '~/Downloads', '/' , 'home/riogu'},
     -- Only save if session has real files (not empty buffers, help, etc)
     pre_save_cmds = {
       function()
@@ -57,7 +57,7 @@ return {
 
         -- Only save if we have real files
         if has_real_file then
-          require('auto-session').SaveSession()
+          require('auto-session').save_session()
         end
       end,
     })
