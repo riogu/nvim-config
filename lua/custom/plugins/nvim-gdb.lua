@@ -124,6 +124,11 @@ return {
 
       if cc1plus_cmd then
         vim.notify('Starting GDB with cc1plus', vim.log.levels.INFO)
+        -- Close current buffer if it's a scratch buffer to make room for GDB
+        local buftype = vim.api.nvim_buf_get_option(0, 'buftype')
+        if buftype == 'nofile' or buftype == 'terminal' then
+          vim.cmd 'enew'
+        end
         vim.cmd(string.format('GdbStart gdb --args %s', cc1plus_cmd))
       else
         vim.notify('Failed to extract cc1plus command', vim.log.levels.ERROR)
@@ -159,6 +164,103 @@ return {
       vim.cmd(cmd)
     end, { nargs = '+', complete = 'file' })
 
+    -- Show DejaGNU directives from test file
+    vim.api.nvim_create_user_command('ShowTestOptions', function(opts)
+      local test_file = opts.args
+      local dejagnu_opts = parse_dejagnu_options(test_file)
+
+      if dejagnu_opts ~= '' then
+        vim.notify('DejaGNU options: ' .. dejagnu_opts, vim.log.levels.INFO)
+      else
+        vim.notify('No DejaGNU options found in ' .. test_file, vim.log.levels.WARN)
+      end
+    end, { nargs = 1, complete = 'file' })
+
+    -- Run test via GCC testsuite (make check-g++)
+    vim.api.nvim_create_user_command('RunTestsuite', function(opts)
+      local test_file = opts.args
+
+      -- Extract just the filename from the full path
+      local filename = test_file:match '([^/]+)$'
+
+      if not filename then
+        vim.notify('Invalid test file path', vim.log.levels.ERROR)
+        return
+      end
+
+      local cmd = string.format('make check-g++ RUNTESTFLAGS="dg.exp=%s"', filename)
+
+      vim.notify('Running testsuite for: ' .. filename, vim.log.levels.INFO)
+
+      -- Run in terminal in current window
+      vim.cmd('terminal ' .. cmd)
+    end, { nargs = 1, complete = 'file' })
+
+    -- Show log file for a test
+    vim.api.nvim_create_user_command('ShowTestLog', function(opts)
+      local test_file = opts.args
+
+      -- Extract just the filename
+      local filename = test_file:match '([^/]+)$'
+
+      if not filename then
+        vim.notify('Invalid test file path', vim.log.levels.ERROR)
+        return
+      end
+
+      -- Look for log files in common locations
+      local log_patterns = {
+        'gcc/testsuite/g++/g++.log',
+        'gcc/testsuite/g++.log',
+        '../gcc/testsuite/g++/g++.log',
+        '../gcc/testsuite/g++.log',
+      }
+
+      local log_file = nil
+      for _, pattern in ipairs(log_patterns) do
+        local f = io.open(pattern, 'r')
+        if f then
+          f:close()
+          log_file = pattern
+          break
+        end
+      end
+
+      if not log_file then
+        vim.notify('Could not find g++.log file. Run the testsuite first.', vim.log.levels.WARN)
+        return
+      end
+
+      -- Search for the test in the log file
+      local cmd = string.format("grep -A 50 '%s' %s", filename, log_file)
+      local handle = io.popen(cmd)
+      local output = handle:read '*a'
+      handle:close()
+
+      if output == '' then
+        vim.notify('Test not found in ' .. log_file .. '. Run testsuite first?', vim.log.levels.WARN)
+        return
+      end
+
+      -- Show in current buffer
+      local buf = vim.api.nvim_create_buf(false, true)
+      local lines = {}
+      for line in output:gmatch '[^\r\n]+' do
+        table.insert(lines, line)
+      end
+
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+      vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+      vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+      vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+      vim.api.nvim_buf_set_option(buf, 'filetype', 'log')
+      vim.api.nvim_buf_set_name(buf, 'Test Log: ' .. filename)
+
+      vim.api.nvim_win_set_buf(0, buf)
+
+      vim.notify('Showing log for: ' .. filename, vim.log.levels.INFO)
+    end, { nargs = 1, complete = 'file' })
+
     -- Run DejaGNU test and show results
     vim.api.nvim_create_user_command('RunTest', function(opts)
       local test_file = opts.args
@@ -178,20 +280,8 @@ return {
 
       vim.notify('Running test: ' .. test_file, vim.log.levels.INFO)
 
-      -- Run in terminal
-      vim.cmd('split | terminal ' .. cmd)
-    end, { nargs = 1, complete = 'file' })
-
-    -- Show DejaGNU directives from test file
-    vim.api.nvim_create_user_command('ShowTestOptions', function(opts)
-      local test_file = opts.args
-      local dejagnu_opts = parse_dejagnu_options(test_file)
-
-      if dejagnu_opts ~= '' then
-        vim.notify('DejaGNU options: ' .. dejagnu_opts, vim.log.levels.INFO)
-      else
-        vim.notify('No DejaGNU options found in ' .. test_file, vim.log.levels.WARN)
-      end
+      -- Run in terminal in current window
+      vim.cmd('terminal ' .. cmd)
     end, { nargs = 1, complete = 'file' })
 
     -- Search for test files by pattern
@@ -248,7 +338,14 @@ return {
           desc = 'Debug this test',
           callback = function()
             local path = get_current_path()
+            local results_buf = vim.api.nvim_get_current_buf()
             vim.cmd 'wincmd p'
+            local prev_buf = vim.api.nvim_get_current_buf()
+            -- Close both buffers
+            vim.api.nvim_buf_delete(results_buf, { force = true })
+            if vim.api.nvim_buf_get_option(prev_buf, 'buftype') ~= '' then
+              vim.api.nvim_buf_delete(prev_buf, { force = true })
+            end
             vim.cmd('GdbCC1plus ' .. path)
           end,
         })
@@ -262,8 +359,28 @@ return {
             vim.cmd('RunTest ' .. path)
           end,
         })
+        vim.api.nvim_buf_set_keymap(buf, 'n', 't', '', {
+          noremap = true,
+          silent = true,
+          desc = 'Run via testsuite',
+          callback = function()
+            local path = get_current_path()
+            vim.cmd 'wincmd p'
+            vim.cmd('RunTestsuite ' .. path)
+          end,
+        })
+        vim.api.nvim_buf_set_keymap(buf, 'n', 'l', '', {
+          noremap = true,
+          silent = true,
+          desc = 'Show log file',
+          callback = function()
+            local path = get_current_path()
+            vim.cmd 'wincmd p'
+            vim.cmd('ShowTestLog ' .. path)
+          end,
+        })
 
-        vim.notify(string.format('Found %d tests. <CR>=open, d=debug, r=run', #lines), vim.log.levels.INFO)
+        vim.notify(string.format('Found %d tests. <CR>=open, d=debug, r=run, t=testsuite, l=log', #lines), vim.log.levels.INFO)
       end
     end, { nargs = 1 })
   end,

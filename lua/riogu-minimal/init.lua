@@ -28,6 +28,8 @@ local p = {
   parameter_orangeish = '#5E80B7',
   stronger_directory_color = '#78B7D7',
 
+  function_name_blue = '#9CD1FF',
+  macro_green = '#5ABCAC',
   greyish_green_riogu = '#617B85',
   red_fixme = '#D14A65',
   soft_pinkish = '#E0B4BB',
@@ -39,8 +41,6 @@ local p = {
   gruber_darker_bg = '#66677D',
   -- gruber_darker_bg = '#3C3C4D',
   gruber_darker_niagara = '#96a6c8',
-  function_name_blue = '#9CD1FF',
-  macro_green = '#5ABCAC',
   gruber_darker_niagara_dark = '#384052',
   gruber_darker_wisteria = '#5C76CB',
   gruber_darker_green_custom = '#369432',
@@ -305,6 +305,7 @@ local highlight_groups = {
   ['@markup.raw.block.markdown'] = { bg = 'NONE', fg = p.variable_scope_color },
   ['@spell.markdown'] = { bg = 'NONE', fg = p.variable_whiteish },
   ['RenderMarkdownCode'] = { fg = 'NONE' },
+  ['RenderMarkdownH2Bg'] = { bg = 'NONE'},
   -- ['@markup.heading.2.markdown'] = { fg = p.gold_yellow, bg = 'NONE' },
   -- Diff
   DiffAdd = { fg = 'NONE', bg = p.gruber_darker_green_custom_m1 },

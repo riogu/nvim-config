@@ -29,6 +29,7 @@ return {
         lua = { 'stylua' },
         c = { 'clang_format' },
         cpp = { 'clang_format' },
+        ocaml = {'ocamlformat'},
         -- formatters = {
         --   clang_format = {
         --     prepend_args = { '--style=file', '--fallback-style=LLVM' },

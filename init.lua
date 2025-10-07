@@ -155,7 +155,7 @@ colorscheme riogu-minimal
 
 
 vim.filetype.add({
-  extension = { fm = "rs" },
+  extension = { fm = "rs" , fs = 'forth' },
 })
 vim.diagnostic.config { virtual_text = true }
 -- })
@@ -187,3 +187,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
   end,
 })
 
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "/tmp/neomutt-*",
+  command = "setfiletype mail"
+})
