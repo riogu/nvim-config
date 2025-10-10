@@ -70,6 +70,8 @@ vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
 vim.keymap.set({ 'n' }, '<S-u>', cmd 'redo', { silent = true, desc = 'Redo' })
 local map = vim.keymap.set
 -- Same thing but for different terminals
+
+map({ 'i', 't' }, '<A-BS>', '<C-w>', { desc = 'Delete word' })
 map({ 'i', 't' }, '<C-BS>', '<C-w>', { desc = 'Delete word' })
 map({ 'i', 't' }, '<C-h>', '<C-w>', { desc = 'Delete word' })
 -- map({ 'i', 't' }, '<C-H>', '<C-w>', { desc = 'Delete word' })

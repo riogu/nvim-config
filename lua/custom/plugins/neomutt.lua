@@ -9,7 +9,7 @@ return {
 
     config = function()
       vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'mail',
+        pattern = { 'mail', 'diff', 'gitsendemail' }, -- updated to include .diff and .patch
         callback = function()
           if vim.b.mail_syntax_loaded then
             return
@@ -56,7 +56,7 @@ return {
             -- Load base mail syntax
             vim.cmd [[runtime! syntax/mail.vim]]
 
-            -- Clear any existing diff syntax (one at a time)
+            -- Clear any existing diff syntax
             pcall(vim.cmd, [[syntax clear diffAdded]])
             pcall(vim.cmd, [[syntax clear diffRemoved]])
             pcall(vim.cmd, [[syntax clear diffLine]])

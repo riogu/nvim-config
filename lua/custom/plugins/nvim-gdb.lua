@@ -80,12 +80,20 @@ return {
         extra_args = dejagnu_opts .. ' ' .. extra_args
       end
 
+      -- Expand home directory
+      local home = os.getenv 'HOME'
+      local libstdcxx_base = home .. '/gcc-source/build/x86_64-pc-linux-gnu/libstdc++-v3'
+      local gcc_source = home .. '/gcc-source/gcc'
+
       local xgpp_cmd = string.format(
         './xg++ -B. -nostdinc++ '
-          .. '-isystem ../x86_64-pc-linux-gnu/libstdc++-v3/include '
-          .. '-isystem ../x86_64-pc-linux-gnu/libstdc++-v3/include/x86_64-pc-linux-gnu '
-          .. '-isystem ../../gcc/libstdc++-v3/libsupc++ '
+          .. '-isystem %s/include '
+          .. '-isystem %s/include/x86_64-pc-linux-gnu '
+          .. '-isystem %s/libstdc++-v3/libsupc++ '
           .. '%s -v %s 2>&1',
+        libstdcxx_base,
+        libstdcxx_base,
+        gcc_source,
         extra_args,
         test_file
       )
@@ -150,14 +158,22 @@ return {
         extra_flags = table.concat(vim.list_slice(args, 3), ' ')
       end
 
+      -- Expand home directory
+      local home = os.getenv 'HOME'
+      local libstdcxx_base = home .. '/gcc-source/build/x86_64-pc-linux-gnu/libstdc++-v3'
+      local gcc_source = home .. '/gcc-source/gcc'
+
       local cmd = string.format(
         'GdbStart gdb --args ./cc1plus -quiet -std=c++%s '
           .. '-nostdinc++ '
-          .. '-isystem ../x86_64-pc-linux-gnu/libstdc++-v3/include '
-          .. '-isystem ../x86_64-pc-linux-gnu/libstdc++-v3/include/x86_64-pc-linux-gnu '
-          .. '-isystem ../../gcc/libstdc++-v3/libsupc++ '
+          .. '-isystem %s/include '
+          .. '-isystem %s/include/x86_64-pc-linux-gnu '
+          .. '-isystem %s/libstdc++-v3/libsupc++ '
           .. '%s %s',
         std_version,
+        libstdcxx_base,
+        libstdcxx_base,
+        gcc_source,
         extra_flags,
         test_file
       )
@@ -188,7 +204,10 @@ return {
         return
       end
 
-      local cmd = string.format('make check-g++ RUNTESTFLAGS="dg.exp=%s"', filename)
+      local home = os.getenv 'HOME'
+      local build_root = home .. '/gcc-source/build/gcc'
+
+      local cmd = string.format('cd %s && make check-g++ RUNTESTFLAGS="dg.exp=%s"', build_root, filename)
 
       vim.notify('Running testsuite for: ' .. filename, vim.log.levels.INFO)
 
@@ -287,7 +306,10 @@ return {
     -- Search for test files by pattern
     vim.api.nvim_create_user_command('FindTest', function(opts)
       local pattern = opts.args
-      local find_cmd = string.format("find ../../gcc/testsuite/g++.dg -name '*%s*.C' -o -name '*%s*.cc'", pattern, pattern)
+      local home = os.getenv 'HOME'
+      local testsuite_path = home .. '/gcc-source/gcc/testsuite/g++.dg'
+
+      local find_cmd = string.format("find %s -name '*%s*.C' -o -name '*%s*.cc'", testsuite_path, pattern, pattern)
 
       local handle = io.popen(find_cmd)
       local results = handle:read '*a'
