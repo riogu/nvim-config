@@ -84,13 +84,18 @@ return {
       local home = os.getenv 'HOME'
       local libstdcxx_base = home .. '/gcc-source/build/x86_64-pc-linux-gnu/libstdc++-v3'
       local gcc_source = home .. '/gcc-source/gcc'
+      local xgpp_path = home .. '/gcc-source/build/gcc/xg++'
+
+      local gcc_build = home .. '/gcc-source/build/gcc'
 
       local xgpp_cmd = string.format(
-        './xg++ -B. -nostdinc++ '
+        '%s -B%s -nostdinc++ '
           .. '-isystem %s/include '
           .. '-isystem %s/include/x86_64-pc-linux-gnu '
           .. '-isystem %s/libstdc++-v3/libsupc++ '
           .. '%s -v %s 2>&1',
+        xgpp_path,
+        gcc_build,
         libstdcxx_base,
         libstdcxx_base,
         gcc_source,
@@ -162,14 +167,16 @@ return {
       local home = os.getenv 'HOME'
       local libstdcxx_base = home .. '/gcc-source/build/x86_64-pc-linux-gnu/libstdc++-v3'
       local gcc_source = home .. '/gcc-source/gcc'
+      local cc1plus_path = home .. '/gcc-source/build/gcc/cc1plus'
 
       local cmd = string.format(
-        'GdbStart gdb --args ./cc1plus -quiet -std=c++%s '
+        'GdbStart gdb --args %s -quiet -std=c++%s '
           .. '-nostdinc++ '
           .. '-isystem %s/include '
           .. '-isystem %s/include/x86_64-pc-linux-gnu '
           .. '-isystem %s/libstdc++-v3/libsupc++ '
           .. '%s %s',
+        cc1plus_path,
         std_version,
         libstdcxx_base,
         libstdcxx_base,
@@ -228,11 +235,10 @@ return {
       end
 
       -- Look for log files in common locations
+      local home = os.getenv 'HOME'
       local log_patterns = {
-        'gcc/testsuite/g++/g++.log',
-        'gcc/testsuite/g++.log',
-        '../gcc/testsuite/g++/g++.log',
-        '../gcc/testsuite/g++.log',
+        home .. '/gcc-source/build/gcc/testsuite/g++/g++.log',
+        home .. '/gcc-source/build/gcc/testsuite/g++.log',
       }
 
       local log_file = nil
@@ -287,12 +293,18 @@ return {
       -- Parse DejaGNU options
       local dejagnu_opts = parse_dejagnu_options(test_file)
 
+      local home = os.getenv 'HOME'
+      local xgpp_path = home .. '/gcc-source/build/gcc/xg++'
+      local gcc_build = home .. '/gcc-source/build/gcc'
+
       local cmd = string.format(
-        './xg++ -B. -nostdinc++ '
+        '%s -B%s -nostdinc++ '
           .. '-isystem ../x86_64-pc-linux-gnu/libstdc++-v3/include '
           .. '-isystem ../x86_64-pc-linux-gnu/libstdc++-v3/include/x86_64-pc-linux-gnu '
           .. '-isystem ../../gcc/libstdc++-v3/libsupc++ '
           .. '%s %s',
+        xgpp_path,
+        gcc_build,
         dejagnu_opts,
         test_file
       )
@@ -322,11 +334,8 @@ return {
 
       if #lines == 0 then
         vim.notify('No tests found matching: ' .. pattern, vim.log.levels.WARN)
-      elseif #lines == 1 then
-        vim.notify('Found: ' .. lines[1], vim.log.levels.INFO)
-        vim.cmd('edit ' .. lines[1])
       else
-        -- Create a scratch buffer with just file paths
+        -- Always create a results buffer (even for single result)
         local buf = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
         vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
