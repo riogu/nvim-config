@@ -224,7 +224,6 @@ return {
       }
       -- After mason-lspconfig.setup, add:
       require('lspconfig').clangd.setup {
-        autostart = false,
         capabilities = capabilities,
         cmd = {
           'clangd',

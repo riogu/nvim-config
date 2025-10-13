@@ -136,13 +136,19 @@ return {
       local cc1plus_cmd = get_cc1plus_command(test_file, extra_args)
 
       if cc1plus_cmd then
-        vim.notify('Starting GDB with cc1plus', vim.log.levels.INFO)
+        vim.notify('Starting GDB with cc1plus from build/gcc directory', vim.log.levels.INFO)
+
+        local home = os.getenv 'HOME'
+        local gcc_build = home .. '/gcc-source/build/gcc'
+
         -- Close current buffer if it's a scratch buffer to make room for GDB
         local buftype = vim.api.nvim_buf_get_option(0, 'buftype')
         if buftype == 'nofile' or buftype == 'terminal' then
           vim.cmd 'enew'
         end
-        vim.cmd(string.format('GdbStart gdb --args %s', cc1plus_cmd))
+
+        -- Start GDB from the build/gcc directory with -x to load .gdbinit
+        vim.cmd(string.format('GdbStart gdb -cd=%s -x .gdbinit --args %s', gcc_build, cc1plus_cmd))
       else
         vim.notify('Failed to extract cc1plus command', vim.log.levels.ERROR)
       end
@@ -168,14 +174,16 @@ return {
       local libstdcxx_base = home .. '/gcc-source/build/x86_64-pc-linux-gnu/libstdc++-v3'
       local gcc_source = home .. '/gcc-source/gcc'
       local cc1plus_path = home .. '/gcc-source/build/gcc/cc1plus'
+      local gcc_build = home .. '/gcc-source/build/gcc'
 
       local cmd = string.format(
-        'GdbStart gdb --args %s -quiet -std=c++%s '
+        'GdbStart gdb -cd=%s -x .gdbinit --args %s -quiet -std=c++%s '
           .. '-nostdinc++ '
           .. '-isystem %s/include '
           .. '-isystem %s/include/x86_64-pc-linux-gnu '
           .. '-isystem %s/libstdc++-v3/libsupc++ '
           .. '%s %s',
+        gcc_build,
         cc1plus_path,
         std_version,
         libstdcxx_base,
@@ -286,6 +294,53 @@ return {
       vim.notify('Showing log for: ' .. filename, vim.log.levels.INFO)
     end, { nargs = 1, complete = 'file' })
 
+    -- Show main log file (always g++.log)
+    vim.api.nvim_create_user_command('ShowTestLog', function(opts)
+      -- Look for log files in common locations
+      local home = os.getenv 'HOME'
+      local log_patterns = {
+        home .. '/gcc-source/build/gcc/testsuite/g++/g++.log',
+        home .. '/gcc-source/build/gcc/testsuite/g++.log',
+      }
+
+      local log_file = nil
+      for _, pattern in ipairs(log_patterns) do
+        local f = io.open(pattern, 'r')
+        if f then
+          f:close()
+          log_file = pattern
+          break
+        end
+      end
+
+      if not log_file then
+        vim.notify('Could not find g++.log file. Run the testsuite first.', vim.log.levels.WARN)
+        return
+      end
+
+      local handle = io.popen('cat ' .. log_file)
+      local output = handle:read '*a'
+      handle:close()
+
+      -- Show in current buffer
+      local buf = vim.api.nvim_create_buf(false, true)
+      local lines = {}
+      for line in output:gmatch '[^\r\n]+' do
+        table.insert(lines, line)
+      end
+
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+      vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+      vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+      vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+      vim.api.nvim_buf_set_option(buf, 'filetype', 'log')
+      vim.api.nvim_buf_set_name(buf, 'Test Log: g++.log')
+
+      vim.api.nvim_win_set_buf(0, buf)
+
+      vim.notify('Showing g++.log', vim.log.levels.INFO)
+    end, { nargs = 0 })
+
     -- Run DejaGNU test and show results
     vim.api.nvim_create_user_command('RunTest', function(opts)
       local test_file = opts.args
@@ -369,14 +424,8 @@ return {
           desc = 'Debug this test',
           callback = function()
             local path = get_current_path()
-            local results_buf = vim.api.nvim_get_current_buf()
             vim.cmd 'wincmd p'
-            local prev_buf = vim.api.nvim_get_current_buf()
-            -- Close both buffers
-            vim.api.nvim_buf_delete(results_buf, { force = true })
-            if vim.api.nvim_buf_get_option(prev_buf, 'buftype') ~= '' then
-              vim.api.nvim_buf_delete(prev_buf, { force = true })
-            end
+            vim.cmd('edit ' .. path)
             vim.cmd('GdbCC1plus ' .. path)
           end,
         })
@@ -405,9 +454,8 @@ return {
           silent = true,
           desc = 'Show log file',
           callback = function()
-            local path = get_current_path()
             vim.cmd 'wincmd p'
-            vim.cmd('ShowTestLog ' .. path)
+            vim.cmd 'ShowTestLog'
           end,
         })
 
