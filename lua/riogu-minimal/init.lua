@@ -131,7 +131,7 @@ local highlight_groups = {
   NormalFloat = { bg = p.almost_background_color, fg = 'NONE' },
   Bold = { bold = true },
   Italic = { italic = true },
-  Underlined = { undercurl = true },
+  Underlined = { undercurl = false },
   Visual = { bg = p.soft_grey_highlight, fg = 'NONE' },
   Directory = { fg = p.directory_color, bold = true },
   IncSearch = { fg = 'NONE', bg = p.even_softer_grey_highlight }, -- yanking color
@@ -264,8 +264,8 @@ local highlight_groups = {
   ['@conditional'] = { link = 'Conditional' },
   ['@exception'] = { link = 'Exception' },
   ['@lsp.type.namespace'] = { fg = p.gold_yellow },
-  ['@lsp.type.parameter.cpp'] = { fg = p.directory_color },
-  ['@lsp.typemod.parameter.declaration.cpp'] = { fg = p.variable_scope_color },
+  ['@lsp.type.parameter.cpp'] = { fg = '#74a1fc' },
+  ['@lsp.typemod.parameter.declaration.cpp'] = { fg = '#82b0ff' },
   -- LSP
   -- ['@lsp.type.class.cpp'] = { fg = p.function_name_blue },
   ['@lsp.type.enumMember'] = { fg = p.string_green },

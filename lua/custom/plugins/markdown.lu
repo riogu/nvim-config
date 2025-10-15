@@ -9,6 +9,7 @@ return {
         enabled = true,
         -- Additional modes to render quotes.
         render_modes = true,
+        file_types = { 'markdown'},
         -- Replaces '>' of 'block_quote'.
         icon = '▋',
         -- Whether to repeat icon on wrapped lines. Requires neovim >= 0.10. This will obscure text
