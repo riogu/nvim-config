@@ -1,6 +1,6 @@
 -- temp-nvim-config/lua/plugins/lualine.lua
 
-local colorscheme = require('riogu-minimal')
+local colorscheme = require('space-mining')
 
 require('lualine').setup({
 	options = {

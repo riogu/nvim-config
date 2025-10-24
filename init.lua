@@ -8,7 +8,7 @@ require("options")
 require("keymaps")
 
 -- Load colorscheme
-local colorscheme = require("riogu-minimal")
+local colorscheme = require("space-mining")
 colorscheme.setup()
 
 -- Add plugins using vim.pack

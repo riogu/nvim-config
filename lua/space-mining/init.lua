@@ -317,7 +317,7 @@ function M.setup()
 		vim.cmd("syntax reset")
 	end
 	vim.o.termguicolors = true
-	vim.g.colors_name = "riogu-minimal"
+	vim.g.colors_name = "space-mining"
 	vim.g.winblend = true
 
 	local hi = vim.api.nvim_set_hl
