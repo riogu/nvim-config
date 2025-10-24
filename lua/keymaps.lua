@@ -1,130 +1,98 @@
--- [[ Basic Keymaps ]]
---  See `:help vim.keymap.set()`
-
-local function cmd(string)
-  return '<cmd>' .. string .. '<CR>'
-end
-
--- Set highlight on search, but clear on pressing <Esc> in normal mode
-vim.opt.hlsearch = true
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
--- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
-
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
--- [[ Basic Autocommands ]]
---  See `:help lua-guide-autocommands`
-
--- Highlight when yanking (copying) text
---  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-})
-vim.keymap.set('n', '<space>fb', ':Telescope file_browser path=%:p:h select_buffer=true<CR>')
--- vim: ts=2 sts=2 sw=2 et
--- vim.keymap.del('n', '<C-f>')
-
-vim.keymap.set({ 'n' }, 's', '<cmd>w<CR>', { remap = true, desc = 'Save file with ctrl s' })
-vim.keymap.set({ 'n', 'i', 'v' }, 'º', '<Esc>', { remap = true, silent = true, desc = 'leave insert mode' })
-vim.keymap.set('n', '<leader>fc', '<cmd>Telescope find_files cwd=~/.config/nvim<CR>', { desc = 'Find in config' })
--- vim.keymap.set('n', '<leader>e', cmd ':Oil', { desc = 'Find files or something' })
-vim.keymap.set('n', '-', cmd ':Explore', { desc = 'Explore-netrw' })
-vim.keymap.set('n', 'e', cmd ':Explore', { desc = 'Explore-netrw' })
-vim.keymap.set('n', '<leader>m', cmd ':colorscheme material-palenight', { desc = 'Set material palenight theme' })
--- Undo and redo
--- vim.keymap.set({ 'n', 'i' }, '<C-/>', cmd ':FloatermNew')
-vim.keymap.set({ 'i', 'n' }, '<z>', cmd 'undo', { desc = 'Undo' })
--- Go bandana dee backwards
-vim.keymap.set({ 'n' }, '<S-u>', cmd 'redo', { silent = true, desc = 'Redo' })
+-- Keymaps
 local map = vim.keymap.set
--- Same thing but for different terminals
 
-map({ 'i', 't' }, '<A-BS>', '<C-w>', { desc = 'Delete word' })
-map({ 'i', 't' }, '<C-BS>', '<C-w>', { desc = 'Delete word' })
-map({ 'i', 't' }, '<C-h>', '<C-w>', { desc = 'Delete word' })
--- map({ 'i', 't' }, '<C-H>', '<C-w>', { desc = 'Delete word' })
--- Simulate deleting word with actual backspaces
-map('i', '<C-h>', function()
-  local col = vim.fn.col('.')
-  local line = vim.fn.getline('.')
-  local before = line:sub(1, col - 1)
-  local word_start = before:match('.*%s()%S*$') or before:match('^()%S*$') or col
-  local delete_count = col - word_start
-  for _ = 1, delete_count do
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<BS>', true, false, true), 'n', false)
+-- Clear search highlight
+vim.opt.hlsearch = true
+map("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
+-- Quick save
+map("n", "s", "<cmd>w<CR>", { desc = "Save" })
+
+-- File exploration (using built-in netrw)
+map("n", "-", "<cmd>Explore<CR>", { desc = "File explorer" })
+map("n", "e", "<cmd>Explore<CR>", { desc = "File explorer" })
+-- Undo/Redo (using faster core commands)
+map("n", "U", "<C-r>", { desc = "Redo (mapped from U)" }) -- U now performs Redo
+-- Delete word in insert mode
+map("i", "<C-h>", "<C-w>", { desc = "Delete word" })
+map("i", "<C-BS>", "<C-w>", { desc = "Delete word" })
+map("i", "<A-BS>", "<C-w>", { desc = "Delete word" })
+
+-- Window management (w prefix)
+map("n", "wv", "<C-w>v", { desc = "Split vertical" })
+map("n", "ws", "<C-w>s", { desc = "Split horizontal" })
+map("n", "wq", "<C-w>q", { desc = "Close window" })
+map("n", "wt", "<cmd>terminal<CR>", { desc = "Terminal" })
+map("n", "w<left>", "<C-w>h", { desc = "Go left" })
+map("n", "w<right>", "<C-w>l", { desc = "Go right" })
+map("n", "w<up>", "<C-w>k", { desc = "Go up" })
+map("n", "w<down>", "<C-w>j", { desc = "Go down" })
+
+-- Diagnostics
+map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+-- Note: It's cleaner to use the built-in :LspDiag to open the quickfix list for diagnostics
+map("n", "<leader>q", "<cmd>LspDiag<CR>", { desc = "Quickfix list" })
+
+-- Terminal mode
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
+-- Telescope (FIXED to use Lua function for file_browser extension)
+map("n", "<leader>fb", function()
+	require("telescope").extensions.file_browser.file_browser()
+end, { desc = "File browser" })
+map("n", "<leader>fc", "<cmd>Telescope find_files cwd=~/.config/nvim<CR>", { desc = "Find config files" })
+
+-- LazyGit
+map("n", "<leader>gg", "<cmd>LazyGit<CR>", { desc = "LazyGit" })
+
+-- Plugin management
+vim.keymap.set('n', '<leader>pu', function()
+  vim.notify('Checking for plugin updates...', vim.log.levels.INFO)
+  vim.pack.update()
+end, { desc = '[P]lugins [U]pdate' })
+
+-- Show recent update log
+vim.keymap.set('n', '<leader>pl', function()
+  local log_file = vim.fn.stdpath('log') .. '/nvim-pack.log'
+  if vim.fn.filereadable(log_file) == 1 then
+    vim.cmd('tabnew ' .. log_file)
+  else
+    vim.notify('No update log found', vim.log.levels.WARN)
   end
-end, { desc = 'Delete word' })
+end, { desc = '[P]lugin [L]og' })
 
--- Window Management
-map('n', '<leader>wv', '<c-w>v', { desc = 'Split window vertically' })
-map('n', '<leader>ws', '<c-w>s', { desc = 'Split window horizontally' })
-map('n', '<leader>wh', '<c-w>h', { desc = 'Go left' })
-map('n', '<leader>wl', '<c-w>l', { desc = 'Go right' })
-map('n', '<leader>wk', '<c-w>k', { desc = 'Go up' })
-map('n', '<leader>wj', '<c-w>j', { desc = 'Go down' })
-map('n', '<leader>wq', '<c-w>q', { desc = 'Close window' })
-map('n', '<leader>wH', '<c-w>H', { desc = 'GO LEFT' })
-map('n', '<leader>wL', '<c-w>L', { desc = 'GO RIGHT' })
-map('n', '<leader>wK', '<c-w>K', { desc = 'GO UP' })
-map('n', '<leader>wJ', '<c-w>J', { desc = 'GO DOWN' })
--- map('n', '<leader>wo', '<c-w>o', { desc = 'Close all other windows' })
-map('n', '<leader>w<left>', '<c-w>h', { desc = 'Go left' })
-map('n', '<leader>w<right>', '<c-w>l', { desc = 'Go right' })
-map('n', '<leader>w<up>', '<c-w>k', { desc = 'Go up' })
-map('n', '<leader>w<down>', '<c-w>j', { desc = 'Go down' })
-map('n', 'wv', '<c-w>v', { desc = 'Split window vertically' })
-map('n', 'ws', '<c-w>s', { desc = 'Split window horizontally' })
-map('n', 'wh', '<c-w>h', { desc = 'Go left' })
-map('n', 'wl', '<c-w>l', { desc = 'Go right' })
-map('n', 'wk', '<c-w>k', { desc = 'Go up' })
-map('n', 'wj', '<c-w>j', { desc = 'Go down' })
-map('n', 'wq', '<c-w>q', { desc = 'Close window' })
-map('n', 'wH', '<c-w>H', { desc = 'GO LEFT' })
-map('n', 'wL', '<c-w>L', { desc = 'GO RIGHT' })
-map('n', 'wK', '<c-w>K', { desc = 'GO UP' })
-map('n', 'wJ', '<c-w>J', { desc = 'GO DOWN' })
-
--- terminal mode shorcuts and stuff
--- vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
-map('n', 'wt', '<cmd>terminal<CR>', { desc = 'Go left' })
-
--- map('n', 'wo', '<c-w>o', { desc = 'Close all other windows' })
-map('n', 'w<left>', '<c-w>h', { desc = 'Go left' })
-map('n', 'w<right>', '<c-w>l', { desc = 'Go right' })
-map('n', 'w<up>', '<c-w>k', { desc = 'Go up' })
-map('n', 'w<down>', '<c-w>j', { desc = 'Go down' })
-
-vim.keymap.set('n', '<leader>ls', '<cmd>LspStart clangd<cr>', { desc = '[L]SP [S]tart clangd' })
-vim.keymap.set('n', '<leader>lx', '<cmd>LspStop clangd<cr>', { desc = '[L]SP stop clangd' })
+-- List installed plugins with versions
+vim.keymap.set('n', '<leader>pi', function()
+  local plugins = vim.pack.get()
+  local lines = { '# Installed Plugins' }  -- Removed \n
+  table.insert(lines, '')  -- Add empty line separately
+  
+  for _, p in ipairs(plugins) do
+    local status = p.active and '✓' or '○'
+    local rev = p.rev and p.rev:sub(1, 7) or 'unknown'
+    table.insert(lines, string.format('%s %s (%s)', status, p.spec.name, rev))
+  end
+  
+  -- Show in a floating window
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
+  
+  local width = 60
+  local height = #lines
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = math.min(height, 30),
+    col = (vim.o.columns - width) / 2,
+    row = (vim.o.lines - height) / 2,
+    style = 'minimal',
+    border = 'rounded',
+    title = ' Plugins ',
+    title_pos = 'center',
+  })
+  
+  vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = buf })
+end, { desc = '[P]lugin [I]nfo' })

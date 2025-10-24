@@ -1,1 +1,0 @@
-require('riogu-minimal').setup()
