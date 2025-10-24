@@ -28,16 +28,28 @@ map("n", "w<right>", "<C-w>l", { desc = "Go right" })
 map("n", "w<up>", "<C-w>k", { desc = "Go up" })
 map("n", "w<down>", "<C-w>j", { desc = "Go down" })
 
+-- Move lines up/down with Alt+arrow keys
+vim.keymap.set("n", "<A-Up>", ":m .-2<CR>==", { desc = "Move line up", silent = true })
+vim.keymap.set("n", "<A-Down>", ":m .+1<CR>==", { desc = "Move line down", silent = true })
+vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv", { desc = "Move selection up", silent = true })
+vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv", { desc = "Move selection down", silent = true })
+
+-- Indent with Alt+Left/Right
+vim.keymap.set("n", "<A-Left>", "<<", { desc = "Decrease indent", silent = true })
+vim.keymap.set("n", "<A-Right>", ">>", { desc = "Increase indent", silent = true })
+vim.keymap.set("v", "<A-Left>", "<gv", { desc = "Decrease indent", silent = true })
+vim.keymap.set("v", "<A-Right>", ">gv", { desc = "Increase indent", silent = true })
+
 -- Diagnostics
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 -- Note: It's cleaner to use the built-in :LspDiag to open the quickfix list for diagnostics
-map("n", "<leader>q", "<cmd>LspDiag<CR>", { desc = "Quickfix list" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist, { desc = "Diagnostics to quickfix" })
 
+-- Telescope (FIXED to use Lua function for file_browser extension)
 -- Terminal mode
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
--- Telescope (FIXED to use Lua function for file_browser extension)
 map("n", "<leader>fb", function()
 	require("telescope").extensions.file_browser.file_browser()
 end, { desc = "File browser" })
@@ -47,52 +59,17 @@ map("n", "<leader>fc", "<cmd>Telescope find_files cwd=~/.config/nvim<CR>", { des
 map("n", "<leader>gg", "<cmd>LazyGit<CR>", { desc = "LazyGit" })
 
 -- Plugin management
-vim.keymap.set('n', '<leader>pu', function()
-  vim.notify('Checking for plugin updates...', vim.log.levels.INFO)
-  vim.pack.update()
-end, { desc = '[P]lugins [U]pdate' })
+vim.keymap.set("n", "<leader>pu", function()
+	vim.notify("Checking for plugin updates...", vim.log.levels.INFO)
+	vim.pack.update()
+end, { desc = "[P]lugins [U]pdate" })
 
 -- Show recent update log
-vim.keymap.set('n', '<leader>pl', function()
-  local log_file = vim.fn.stdpath('log') .. '/nvim-pack.log'
-  if vim.fn.filereadable(log_file) == 1 then
-    vim.cmd('tabnew ' .. log_file)
-  else
-    vim.notify('No update log found', vim.log.levels.WARN)
-  end
-end, { desc = '[P]lugin [L]og' })
-
--- List installed plugins with versions
-vim.keymap.set('n', '<leader>pi', function()
-  local plugins = vim.pack.get()
-  local lines = { '# Installed Plugins' }  -- Removed \n
-  table.insert(lines, '')  -- Add empty line separately
-  
-  for _, p in ipairs(plugins) do
-    local status = p.active and '✓' or '○'
-    local rev = p.rev and p.rev:sub(1, 7) or 'unknown'
-    table.insert(lines, string.format('%s %s (%s)', status, p.spec.name, rev))
-  end
-  
-  -- Show in a floating window
-  local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
-  
-  local width = 60
-  local height = #lines
-  local win = vim.api.nvim_open_win(buf, true, {
-    relative = 'editor',
-    width = width,
-    height = math.min(height, 30),
-    col = (vim.o.columns - width) / 2,
-    row = (vim.o.lines - height) / 2,
-    style = 'minimal',
-    border = 'rounded',
-    title = ' Plugins ',
-    title_pos = 'center',
-  })
-  
-  vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = buf })
-end, { desc = '[P]lugin [I]nfo' })
+vim.keymap.set("n", "<leader>pl", function()
+	local log_file = vim.fn.stdpath("log") .. "/nvim-pack.log"
+	if vim.fn.filereadable(log_file) == 1 then
+		vim.cmd("tabnew " .. log_file)
+	else
+		vim.notify("No update log found", vim.log.levels.WARN)
+	end
+end, { desc = "[P]lugin [L]og" })
