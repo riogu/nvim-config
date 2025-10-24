@@ -37,7 +37,7 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "gcc1plus": {
-      "rev": "a1877ef",
+      "rev": "4498d18",
       "src": "https://github.com/riogu/gcc1plus"
     },
     "gitsigns.nvim": {

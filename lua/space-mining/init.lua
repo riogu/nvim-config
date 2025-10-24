@@ -306,7 +306,7 @@ M.lualine_theme = {
 	inactive = {
 		a = { bg = p.almost_background_color, fg = p.even_softer_grey_highlight },
 		b = { bg = p.almost_background_color, fg = p.even_softer_grey_highlight },
-		c = { bg = p.background_color, fg = p.even_softer_grey_highlight },
+		c = { bg = p.almost_background_color, fg = p.even_even_even_softer_grey_highlight },
 	},
 }
 

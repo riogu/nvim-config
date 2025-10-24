@@ -2,8 +2,6 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
 
--- Use :lua vim.pack.update() to update plugins (with nice UI!)
--- Use :lua vim.pack.del({'plugin-name'}) to remove
 require("options")
 require("keymaps")
 
