@@ -65,7 +65,14 @@ local highlight_groups = {
 	LineNr = { bg = p.background_color, fg = p.soft_grey_highlight },
 	LineNrAbove = { link = "LineNr" },
 	LineNrBelow = { link = "LineNr" },
-	qfText = { fg = "#C29C6D" },
+	-- Quickfix/Location list
+	qfLineNr = { fg = p.even_softer_grey_highlight }, -- Softer line numbers
+	qfFileName = { fg = p.class_struct_blue, bold = true },
+	qfSeparator = { fg = p.even_even_softer_grey_highlight },
+	qfText = { fg = p.variable_purple_blue },
+	-- Selected line in quickfix
+	QuickFixLine = { bg = p.soft_grey_highlight },
+
 	DiagnosticVirtualTextError = { bg = "none", fg = "#B9545E" },
 	DiagnosticVirtualTextHint = { bg = "none", fg = p.global_blue },
 	DiagnosticVirtualTextInfo = { bg = "none", fg = p.global_blue },
@@ -81,6 +88,7 @@ local highlight_groups = {
 	StatusLineAccent = { bg = p.almost_background_color },
 	-- Mode = { bg =p.almost_background_color },
 	-----------------------------------------------------------
+	EndOfBuffer = { fg = p.soft_grey_highlight, bg = p.background_color },
 	SignColumn = { bg = p.background_color },
 	Colorcolumn = { link = "StatusLine" },
 	TabLineFill = { bg = p.soft_grey_highlight },

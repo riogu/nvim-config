@@ -50,11 +50,11 @@ cmp.setup({
 				luasnip.expand_or_jump()
 			end
 		end, { "i", "s" }),
-		["<C-h>"] = cmp.mapping(function()
-			if luasnip.locally_jumpable(-1) then
-				luasnip.jump(-1)
-			end
-		end, { "i", "s" }),
+		-- ["<C-h>"] = cmp.mapping(function()
+		-- 	if luasnip.locally_jumpable(-1) then
+		-- 		luasnip.jump(-1)
+			-- end
+		-- end, { "i", "s" }),
 	}),
 
 	-- Sources: Ensure these match the plugins you pack.add in init.lua

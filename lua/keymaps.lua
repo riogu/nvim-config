@@ -14,6 +14,7 @@ map("n", "e", "<cmd>Explore<CR>", { desc = "File explorer" })
 -- Undo/Redo (using faster core commands)
 map("n", "U", "<C-r>", { desc = "Redo (mapped from U)" }) -- U now performs Redo
 -- Delete word in insert mode
+-- Delete word forward with Ctrl+Delete
 map("i", "<C-h>", "<C-w>", { desc = "Delete word" })
 map("i", "<C-BS>", "<C-w>", { desc = "Delete word" })
 map("i", "<A-BS>", "<C-w>", { desc = "Delete word" })

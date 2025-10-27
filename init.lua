@@ -110,7 +110,6 @@ require("plugins.netrw")
 require("plugins.lazygit")
 require("plugins.log-highlight")
 
-
 -- Autocommands
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
