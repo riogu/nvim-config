@@ -1,10 +1,10 @@
 -- Keymaps
 local map = vim.keymap.set
+vim.keymap.set('n', '<leader>gf', ':FindTest ')
 
 -- Clear search highlight
 vim.opt.hlsearch = true
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
 -- Quick save
 map("n", "s", "<cmd>w<CR>", { desc = "Save" })
 
