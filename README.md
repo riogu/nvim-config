@@ -1,13 +1,5 @@
 # nvim config
 
-Personal Neovim configuration using lazy.nvim.
-
-## Requirements
-
-- Neovim >= 0.10.0
-- Git
-- A [Nerd Font](https://www.nerdfonts.com/) (optional, recommended)
-
 ## Installation
 
 ```bash
