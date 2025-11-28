@@ -106,6 +106,7 @@ require("plugins.cinnamon")
 require("plugins.netrw")
 require("plugins.lazygit")
 require("plugins.log-highlight")
+require("plugins.mail-syntax")
 
 -- Autocommands
 vim.api.nvim_create_autocmd("TextYankPost", {
