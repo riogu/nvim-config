@@ -1,10 +1,9 @@
--- Mail syntax highlighting plugin
+-- Mail syntax highlighting - custom configuration
 return {
-	-- This is a custom config, so we just return a dummy plugin spec
-	-- and configure everything in the config function
-	name = "mail-syntax",
-	dir = vim.fn.stdpath("config") .. "/lua/plugins/mail-syntax.lua",
-	config = function()
+	-- This is custom config without a plugin
+	lazy = false,
+	priority = 100,
+	init = function()
 		-- Helper function to darken colors
 		local function darken(hex, factor)
 			if not hex then
