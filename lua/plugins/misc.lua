@@ -126,7 +126,12 @@ return {
 	{ "tpope/vim-sleuth" }, -- Detect tabstop and shiftwidth automatically
 	{ "wakatime/vim-wakatime" }, -- Wakatime time tracking
 	{ "kylelaker/riscv.vim" }, -- RISC-V syntax
-	{ "riogu/gcc1plus" }, -- Custom gcc1plus
+
+	-- Custom gcc1plus (lazy load on C/C++ files to avoid startup message)
+	{
+		"riogu/gcc1plus",
+		ft = { "c", "cpp" },
+	},
 
 	-- nvim-gdb with build hook
 	{
