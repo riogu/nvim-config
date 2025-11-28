@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-git clone https://github.com/riogu/nvim ~/.config/nvim
+git clone https://github.com/riogu/nvim-config ~/.config/nvim
 nvim
 ```
 
