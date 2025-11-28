@@ -9,104 +9,25 @@ require("keymaps")
 local colorscheme = require("space-mining")
 colorscheme.setup()
 
--- Add plugins using vim.pack
-vim.pack.add({
-	-- Core LSP and completion
-	"https://github.com/neovim/nvim-lspconfig",
-	"https://github.com/hrsh7th/nvim-cmp",
-	"https://github.com/hrsh7th/cmp-nvim-lsp",
-	"https://github.com/hrsh7th/cmp-buffer",
-	"https://github.com/hrsh7th/cmp-path",
-	"https://github.com/L3MON4D3/LuaSnip",
-	"https://github.com/saadparwaiz1/cmp_luasnip",
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+end
+vim.opt.rtp:prepend(lazypath)
 
-	-- Treesitter
-	"https://github.com/nvim-treesitter/nvim-treesitter",
-
-	-- Telescope
-	"https://github.com/nvim-telescope/telescope-ui-select.nvim",
-	"https://github.com/nvim-telescope/telescope.nvim",
-	"https://github.com/nvim-telescope/telescope-file-browser.nvim",
-	"https://github.com/nvim-lua/plenary.nvim",
-	"https://github.com/nvim-telescope/telescope-fzf-native.nvim",
-
-	-- Formatting
-	"https://github.com/stevearc/conform.nvim",
-
-	-- Git
-	"https://github.com/lewis6991/gitsigns.nvim",
-	"https://github.com/kdheepak/lazygit.nvim",
-
-	-- UI
-	"https://github.com/folke/which-key.nvim",
-	"https://github.com/numToStr/Comment.nvim",
-	"https://github.com/folke/todo-comments.nvim",
-	"https://github.com/nvim-lualine/lualine.nvim",
-	"https://github.com/nvim-tree/nvim-web-devicons",
-
-	-- Mini
-	"https://github.com/echasnovski/mini.nvim",
-
-	-- Terminal
-	"https://github.com/akinsho/toggleterm.nvim",
-
-	-- Session
-	"https://github.com/rmagatti/auto-session",
-
-	-- Utilities
-	"https://github.com/tpope/vim-sleuth",
-	"https://github.com/prichrd/netrw.nvim",
-	"https://github.com/wakatime/vim-wakatime",
-	"https://github.com/kylelaker/riscv.vim",
-	"https://github.com/declancm/cinnamon.nvim",
-	"https://github.com/fei6409/log-highlight.nvim",
-	"https://github.com/brenoprata10/nvim-highlight-colors",
-
-	-- Custom
-	"https://github.com/riogu/gcc1plus",
-	"https://github.com/sakhnik/nvim-gdb",
-}, { load = true, confirm = false })
-
--- Build hooks for plugins that need compilation
-vim.api.nvim_create_autocmd("PackChanged", {
-	callback = function(ev)
-		local name, kind = ev.data.spec.name, ev.data.kind
-
-		-- Build telescope-fzf-native after install/update
-		if name == "telescope-fzf-native.nvim" and (kind == "install" or kind == "update") then
-			if vim.fn.executable("make") == 1 then
-				print("Building telescope-fzf-native...")
-				vim.system({ "make" }, { cwd = ev.data.path })
-			end
-		end
-
-		-- Build nvim-gdb after install/update
-		if name == "nvim-gdb" and (kind == "install" or kind == "update") then
-			local install_sh = ev.data.path .. "/install.sh"
-			if vim.fn.filereadable(install_sh) == 1 then
-				print("Building nvim-gdb...")
-				vim.system({ "bash", "install.sh" }, { cwd = ev.data.path })
-			end
-		end
-	end,
+-- Setup lazy.nvim
+require("lazy").setup({
+	-- Import all plugin specs from lua/plugins/
+	{ import = "plugins" },
+}, {
+	checker = { enabled = false },
+	change_detection = { notify = false },
 })
 
--- Load plugin configs
-require("plugins.lsp")
-require("plugins.cmp")
-require("plugins.treesitter")
-require("plugins.telescope")
-require("plugins.conform")
-require("plugins.gitsigns")
-require("plugins.todo-comments")
-require("plugins.lualine")
-require("plugins.toggleterm")
-require("plugins.autosession")
-require("plugins.cinnamon")
-require("plugins.netrw")
-require("plugins.lazygit")
-require("plugins.log-highlight")
-require("plugins.mail-syntax")
+-- Load custom configurations
+require("config.mail-syntax")
 
 -- Autocommands
 vim.api.nvim_create_autocmd("TextYankPost", {
