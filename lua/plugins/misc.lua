@@ -130,7 +130,7 @@ return {
 	-- Custom gcc1plus (lazy load on C/C++ files to avoid startup message)
 	{
 		"riogu/gcc1plus",
-		ft = { "c", "cpp" },
+		-- ft = { "c", "cpp" },
 	},
 
 	-- nvim-gdb with build hook
