@@ -11,6 +11,7 @@ On first launch, lazy.nvim will automatically install itself and all plugins.
 
 ## Features
 
+- **Custom Colorscheme**: space-mining colorscheme
 - **LSP**: clangd, lua_ls
 - **Completion**: nvim-cmp with snippets
 - **Fuzzy finding**: Telescope
