@@ -79,26 +79,26 @@ return {
 			}
 		end
 
-		-- Configure lua_ls
-		if vim.fn.executable("lua-language-server") == 1 then
-			vim.lsp.config.lua_ls = {
-				capabilities = capabilities,
-				settings = {
-					Lua = {
-						runtime = { version = "LuaJIT" },
-						diagnostics = { globals = { "vim" } },
-						workspace = {
-							library = vim.api.nvim_get_runtime_file("", true),
-							checkThirdParty = false,
-						},
-						telemetry = { enable = false },
-						completion = { callSnippet = "Replace" },
-					},
-				},
-			}
-		end
+		-- -- Configure lua_ls
+		-- if vim.fn.executable("lua-language-server") == 1 then
+		-- 	vim.lsp.config.lua_ls = {
+		-- 		capabilities = capabilities,
+		-- 		settings = {
+		-- 			Lua = {
+		-- 				runtime = { version = "LuaJIT" },
+		-- 				diagnostics = { globals = { "vim" } },
+		-- 				workspace = {
+		-- 					library = vim.api.nvim_get_runtime_file("", true),
+		-- 					checkThirdParty = false,
+		-- 				},
+		-- 				telemetry = { enable = false },
+		-- 				completion = { callSnippet = "Replace" },
+		-- 			},
+		-- 		},
+		-- 	}
+		-- end
 
 		-- Autostart both servers
-		vim.lsp.enable({ "clangd", "lua_ls" })
+		vim.lsp.enable({ "clangd" })
 	end,
 }

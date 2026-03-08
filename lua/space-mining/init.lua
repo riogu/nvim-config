@@ -180,9 +180,9 @@ local highlight_groups = {
 	Function = { fg = colors.blue_light },
 
 	Statement = { link = "Type" },
-	Conditional = { fg = colors.pink },
+	Conditional = { fg = colors.blue_struct },
 	Repeat = { fg = colors.blue_struct },
-	Label = { link = "String" },
+	Label = { fg = colors.blue_struct },
 	Operator = { fg = colors.ui_grey },
 	Keyword = { fg = colors.ui_blue_light },
 	Exception = { link = "Keyword" },
@@ -376,7 +376,10 @@ local highlight_groups = {
 	javaString = { link = "String" },
 	javaNumber = { link = "Number" },
 	javaComment = { link = "Comment" },
-	javaParen = { fg = colors.fg_light },
+	javaParen = { fg = colors.ui_grey },
+	javaBlock = { fg = colors.ui_grey },
+	javaBlockOther = { fg = colors.ui_grey },
+	javaBlockStart = { fg = colors.ui_grey },
 
 	-- ========================================================================
 	-- JavaScript/TypeScript Vim Syntax Fallback Groups
@@ -631,7 +634,7 @@ local highlight_groups = {
 	["@lsp.type.unresolvedReference.rust"] = { undercurl = true, sp = colors.red_error },
 	["@lsp.typemod.function.declaration.rust"] = { fg = colors.blue_light },
 	["@lsp.typemod.function.trait.rust"] = { fg = colors.blue_light },
-	["@lsp.typemod.keyword.controlFlow.rust"] = { fg = colors.pink },
+	["@lsp.typemod.keyword.controlFlow.rust"] = { fg = colors.blue_struct },
 	["@lsp.typemod.keyword.unsafe.rust"] = { fg = colors.orange },
 	["@lsp.typemod.variable.mutable.rust"] = {},
 	["@lsp.typemod.variable.callable.rust"] = {},
