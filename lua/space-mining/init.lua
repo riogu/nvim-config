@@ -546,7 +546,7 @@ local highlight_groups = {
 	["@module"] = { fg = colors.yellow },
 
 	-- Attributes
-	["@attribute"] = { fg = colors.ui_grey },
+	["@attribute"] = { fg = colors.ui_blue },
 	["@attribute.builtin"] = { fg = colors.ui_grey },
 
 	-- Tags (HTML/XML)

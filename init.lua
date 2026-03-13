@@ -9,8 +9,6 @@ require("keymaps")
 local colorscheme = require("space-mining")
 colorscheme.setup()
 
--- vim.cmd[[colorscheme tokyonight]]
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -18,6 +16,12 @@ if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 end
 vim.opt.rtp:prepend(lazypath)
+
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function()
+    pcall(vim.treesitter.start)
+  end,
+})
 
 -- Setup lazy.nvim
 require("lazy").setup({
