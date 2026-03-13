@@ -139,4 +139,53 @@ return {
 		"sakhnik/nvim-gdb",
 		build = "bash install.sh",
 	},
+	-- {
+	-- 	"MeanderingProgrammer/render-markdown.nvim",
+	-- 	dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
+	-- 	-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
+	-- 	-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+	-- 	---@module 'render-markdown'
+	-- 	---@type render.md.UserConfig
+	-- 	opts = {
+	-- 		quote = { repeat_linebreak = true },
+	-- 	},
+	-- },
+	-- Lua
+	{
+		"folke/zen-mode.nvim",
+		opts = {
+			window = {
+				backdrop = 0.95,
+			},
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+			-- refer to the configuration section below
+			plugins = {
+				-- disable some global vim options (vim.o...)
+				-- comment the lines to not apply the options
+				options = {
+					enabled = true,
+					ruler = true, -- disables the ruler text in the cmd line area
+					showcmd = true, -- disables the command in the last line of the screen
+					-- you may turn on/off statusline in zen mode by setting 'laststatus'
+					-- statusline will be shown only if 'laststatus' == 3
+					laststatus = 3, -- turn off the statusline in zen mode
+				},
+			},
+		},
+	},
+	{
+		"sindrets/diffview.nvim",
+		dependencies = "nvim-lua/plenary.nvim",
+
+		config = function()
+			require("diffview").setup({
+				view = {
+					merge_tool = {
+						layout = "diff3_vertical",
+					},
+				},
+			})
+		end,
+	},
 }

@@ -731,14 +731,83 @@ local highlight_groups = {
 	-- Render-markdown.nvim
 	-- ========================================================================
 
-	RenderMarkdownCodeInline = { bg = "NONE", fg = "NONE" },
-	RenderMarkdownCode = { bg = "#333946", fg = "NONE" },
-	RenderMarkdownH1Bg = { fg = colors.yellow, bg = "NONE" },
-	RenderMarkdownH2Bg = { fg = colors.blue, bg = "NONE" },
-	RenderMarkdownBullet = { fg = colors.ui_blue, bg = "NONE" },
-	RenderMarkdownQuote1 = { bg = "NONE", fg = colors.comment },
-	RenderMarkdownQuote2 = { bg = "NONE", fg = colors.ui_purple },
-	RenderMarkdownQuote3 = { bg = "NONE", fg = colors.ui_grey_light },
+	-- ========================================================================
+	-- Render-markdown.nvim
+	-- ========================================================================
+
+	-- Headings - icons use your accent colors, backgrounds are very subtle tinted bands
+	RenderMarkdownH1 = { fg = colors.yellow, bold = true },
+	RenderMarkdownH2 = { fg = colors.blue_bright, bold = true },
+	RenderMarkdownH3 = { fg = colors.cyan, bold = true },
+	RenderMarkdownH4 = { fg = colors.blue_struct, bold = true },
+	RenderMarkdownH5 = { fg = colors.ui_blue_light, bold = true },
+	RenderMarkdownH6 = { fg = colors.ui_purple, bold = true },
+
+	-- Heading backgrounds - very subtle tinted bands that don't overwhelm
+	RenderMarkdownH1Bg = { bg = "#333946" }, -- warm subtle yellow tint
+	RenderMarkdownH2Bg = { bg = "#2d3344" }, -- subtle blue tint
+	RenderMarkdownH3Bg = { bg = "#2d3840" }, -- subtle cyan tint
+	RenderMarkdownH4Bg = { bg = "#303548" }, -- subtle blue-struct tint
+	RenderMarkdownH5Bg = { bg = "#2f3445" }, -- subtle lighter blue tint
+	RenderMarkdownH6Bg = { bg = "#323341" }, -- subtle purple tint
+
+	-- Code blocks - slightly lighter than bg, matches your existing
+	RenderMarkdownCode = { bg = "#333946" },
+	RenderMarkdownCodeInline = { bg = "#333946", fg = "#98A7C6" },
+	RenderMarkdownCodeBorder = { bg = "#333946", fg = colors.comment },
+	RenderMarkdownCodeInfo = { fg = colors.comment, italic = true },
+	RenderMarkdownCodeFallback = { fg = colors.fg_dim },
+
+	-- Block quotes - descending through your blue/grey palette
+	RenderMarkdownQuote =  { fg = colors.comment },
+	RenderMarkdownQuote1 = { fg = colors.ui_blue },
+	RenderMarkdownQuote2 = { fg = colors.ui_purple },
+	RenderMarkdownQuote3 = { fg = colors.ui_grey_light },
+	RenderMarkdownQuote4 = { fg = colors.comment },
+	RenderMarkdownQuote5 = { fg = colors.bg_highlight3 },
+	RenderMarkdownQuote6 = { fg = colors.bg_highlight2 },
+
+	-- Lists and bullets
+	RenderMarkdownBullet = { fg = colors.ui_blue },
+
+	-- Checkboxes
+	RenderMarkdownUnchecked = { fg = colors.ui_grey },
+	RenderMarkdownChecked = { fg = colors.green, bold = true },
+	RenderMarkdownTodo = { fg = colors.orange },
+
+	-- Links
+	RenderMarkdownLink = { fg = colors.blue_bright },
+	RenderMarkdownLinkTitle = { fg = colors.blue_light, underline = true },
+	RenderMarkdownWikiLink = { fg = colors.blue_bright },
+
+	-- Tables
+	RenderMarkdownTableHead = { fg = colors.yellow, bold = true },
+	RenderMarkdownTableRow = { fg = colors.fg_dim },
+
+	-- Thematic break / dash
+	RenderMarkdownDash = { fg = colors.bg_highlight2 },
+
+	-- Inline highlight
+	RenderMarkdownInlineHighlight = { bg = "#383e4e", fg = colors.fg_dim },
+
+	-- Sign column
+	RenderMarkdownSign = { bg = colors.bg },
+
+	-- Math
+	RenderMarkdownMath = { fg = colors.cyan },
+
+	-- Indent guides
+	RenderMarkdownIndent = { fg = colors.bg_highlight },
+
+	-- HTML comments
+	RenderMarkdownHtmlComment = { fg = colors.comment, italic = true },
+
+	-- Callouts - using your diagnostic colors for consistency
+	RenderMarkdownSuccess = { fg = colors.green },
+	RenderMarkdownInfo = { fg = colors.info },
+	RenderMarkdownHint = { fg = colors.hint },
+	RenderMarkdownWarn = { fg = colors.warning },
+	RenderMarkdownError = { fg = colors.red_error },
 
 	-- ========================================================================
 	-- Oil.nvim

@@ -51,6 +51,10 @@ return {
 				find_files = {
 					theme = "dropdown",
 					previewer = true,
+					layout_config = {
+						width = 0.95,
+					},
+					path_display = { "truncate" },
 				},
 			},
 			extensions = {
@@ -90,11 +94,15 @@ return {
 
 		-- Live grep with dropdown theme
 		vim.keymap.set("n", "sg", function()
-			builtin.live_grep(require("telescope.themes").get_dropdown({
-				winblend = 10,
-				previewer = true,
-			}))
-		end, { desc = "[S]earch [/] in Open Files" })
+			builtin.live_grep({
+				layout_strategy = "horizontal",
+				layout_config = {
+					width = 0.95,
+					height = 0.9,
+					preview_width = 0.6,
+				},
+			})
+		end, { desc = "[S]earch by [G]rep" })
 
 		-- Search Neovim config files
 		vim.keymap.set("n", "<leader>sn", function()

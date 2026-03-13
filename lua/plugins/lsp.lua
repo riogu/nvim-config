@@ -99,6 +99,24 @@ return {
 		-- end
 
 		-- Autostart both servers
-		vim.lsp.enable({ "clangd" })
+		-- Configure mdpls
+		if vim.fn.executable("mdpls") == 1 then
+			vim.lsp.config.mdpls = {
+				cmd = { "mdpls" },
+				filetypes = { "markdown" },
+				root_markers = { ".git" },
+				single_file_support = true,
+				capabilities = capabilities,
+				settings = {
+					markdown = {
+						preview = {
+							auto = true,
+							serveStatic = true,
+						},
+					},
+				},
+			}
+		end
+		vim.lsp.enable({ "clangd", "mdpls" })
 	end,
 }
