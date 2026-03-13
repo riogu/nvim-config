@@ -70,12 +70,6 @@ return {
 				init_options = {
 					clangdFileStatus = false,
 				},
-				on_attach = function(client, bufnr)
-					local size = vim.fn.getfsize(vim.fn.expand("%"))
-					if size > 100000 then
-						client.server_capabilities.semanticTokensProvider = nil
-					end
-				end,
 			}
 		end
 
