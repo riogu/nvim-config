@@ -664,14 +664,13 @@ local highlight_groups = {
 	-- ========================================================================
 	-- Diff
 	-- ========================================================================
-
-	DiffAdd = { fg = "NONE", bg = "#1a2b1a" },
+	DiffAdd = { fg = "NONE", bg = "#2a3a35" }, -- plus-non-emph
 	DiffAdded = { fg = colors.green, bg = "NONE" },
-	DiffChange = { fg = "NONE", bg = "#2b2b1a" },
+	DiffChange = { fg = "NONE", bg = "#2a3a35" }, -- plus-non-emph (closest for change)
 	DiffChanged = { fg = colors.yellow, bg = "NONE" },
-	DiffDelete = { fg = "NONE", bg = "#2b1a1a" },
+	DiffDelete = { fg = "NONE", bg = "#3a2f32" }, -- minus-non-emph
 	DiffRemoved = { fg = colors.red, bg = "NONE" },
-	DiffText = { fg = colors.green, bg = "NONE", bold = true },
+	DiffText = { fg = "NONE", bg = "#355452" }, -- plus-emph (changed text within line)
 
 	-- ========================================================================
 	-- Diagnostics
@@ -759,7 +758,7 @@ local highlight_groups = {
 	RenderMarkdownCodeFallback = { fg = colors.fg_dim },
 
 	-- Block quotes - descending through your blue/grey palette
-	RenderMarkdownQuote =  { fg = colors.comment },
+	RenderMarkdownQuote = { fg = colors.comment },
 	RenderMarkdownQuote1 = { fg = colors.ui_blue },
 	RenderMarkdownQuote2 = { fg = colors.ui_purple },
 	RenderMarkdownQuote3 = { fg = colors.ui_grey_light },
