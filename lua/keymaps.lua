@@ -78,7 +78,7 @@ end, { desc = "[P]lugin [L]og" })
 -- Preview email/patch files with delta-colorize
 vim.keymap.set("n", "<C-p>", function()
 	local current_file = vim.fn.expand("%:p")
-	
+
 	-- If no file name, write to temp file
 	if current_file == "" then
 		current_file = vim.fn.tempname()
@@ -86,11 +86,38 @@ vim.keymap.set("n", "<C-p>", function()
 	else
 		vim.cmd("write")
 	end
-	
+
 	-- Open preview in new tab
 	vim.cmd("tabnew")
 	vim.cmd("terminal cat " .. vim.fn.shellescape(current_file) .. " | ~/.config/aerc/filters/delta-colorize")
-	
+
 	-- Map q to close the preview tab
 	vim.keymap.set("n", "q", ":tabclose<CR>", { buffer = true })
 end, { desc = "Preview email/patch with delta-colorize" })
+
+-- Markdown preview command (replaces mdpls LSP config)
+vim.api.nvim_create_user_command("PreviewMarkdown", function()
+	if vim.bo.filetype ~= "markdown" then
+		vim.notify("Not a markdown file", vim.log.levels.WARN)
+		return
+	end
+	vim.lsp.start({
+		name = "mdpls",
+		cmd = { "mdpls" },
+		root_dir = vim.fs.root(0, { ".git" }) or vim.fn.getcwd(),
+		settings = {
+			markdown = {
+				preview = {
+					auto = true,
+					serveStatic = true,
+				},
+			},
+		},
+	})
+end, { desc = "Start markdown preview via mdpls" })
+
+vim.api.nvim_create_user_command("PreviewMarkdownStop", function()
+    for _, client in ipairs(vim.lsp.get_clients({ name = "mdpls" })) do
+        client:stop()
+    end
+end, { desc = "Stop markdown preview" })
