@@ -91,8 +91,28 @@ return {
 		-- 		},
 		-- 	}
 		-- end
-
-		-- Autostart both servers
-		vim.lsp.enable({ "clangd" })
+		vim.lsp.config.vue_ls = {
+			capabilities = capabilities,
+		}
+		-- Configure rust-analyzer
+		if vim.fn.executable("rust-analyzer") == 1 then
+			vim.lsp.config.rust_analyzer = {
+				cmd = { "rust-analyzer" },
+				filetypes = { "rust" },
+				root_markers = { "Cargo.toml", "rust-project.json" },
+				capabilities = capabilities,
+				settings = {
+					["rust-analyzer"] = {
+						check = { command = "clippy" },
+						inlayHints = {
+							bindingModeHints = { enable = true },
+							closureCaptureHints = { enable = true },
+							lifetimeElisionHints = { enable = "always" },
+						},
+					},
+				},
+			}
+		end
+		vim.lsp.enable({ "clangd", "vue_ls", "rust_analyzer" })
 	end,
 }

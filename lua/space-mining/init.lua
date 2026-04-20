@@ -385,25 +385,25 @@ local highlight_groups = {
 	-- JavaScript/TypeScript Vim Syntax Fallback Groups
 	-- ========================================================================
 
-	javaScriptIdentifier = { link = "Keyword" },
-	javaScriptFunction = { link = "Keyword" },
-	javaScriptEmbed = { fg = colors.yellow },
-	javaScriptBraces = { link = "Normal" },
-	javaScriptParens = { fg = colors.fg_light },
-	javaScriptNumber = { link = "Number" },
-	javaScriptString = { link = "String" },
-	javaScriptComment = { link = "Comment" },
-	javaScriptOperator = { link = "Operator" },
-	javaScriptNull = { fg = colors.pink },
-
-	typescriptBraces = { fg = colors.fg_light },
-	typescriptParens = { fg = colors.fg_light },
-	typescriptEndColons = { fg = colors.fg_light },
-	typescriptOperator = { link = "Operator" },
-	typescriptType = { fg = colors.yellow },
-	typescriptVariable = { fg = colors.ui_blue_light },
-	typescriptImport = { fg = colors.blue },
-	typescriptExport = { fg = colors.blue },
+	-- javaScriptIdentifier = { link = "Keyword" },
+	-- javaScriptFunction = { link = "Keyword" },
+	-- javaScriptEmbed = { fg = colors.yellow },
+	-- javaScriptBraces = { link = "Normal" },
+	-- javaScriptParens = { fg = colors.fg_light },
+	-- javaScriptNumber = { link = "Number" },
+	-- javaScriptString = { link = "String" },
+	-- javaScriptComment = { link = "Comment" },
+	-- javaScriptOperator = { link = "Operator" },
+	-- javaScriptNull = { fg = colors.pink },
+	--
+	-- typescriptBraces = { fg = colors.fg_light },
+	-- typescriptParens = { fg = colors.fg_light },
+	-- typescriptEndColons = { fg = colors.fg_light },
+	-- typescriptOperator = { link = "Operator" },
+	-- typescriptType = { fg = colors.yellow },
+	-- typescriptVariable = { fg = colors.ui_blue_light },
+	-- typescriptImport = { fg = colors.blue },
+	-- typescriptExport = { fg = colors.blue },
 
 	-- ========================================================================
 	-- Treesitter Highlights
@@ -577,7 +577,7 @@ local highlight_groups = {
 	["@lsp.type.number"] = { link = "Number" },
 	["@lsp.type.type"] = { fg = colors.yellow },
 	["@lsp.type.class"] = { fg = colors.yellow },
-	["@lsp.type.decorator"] = { fg = colors.orange },
+	["@lsp.type.decorator"] = { fg = colors.blue_param },
 	["@lsp.type.lifetime"] = { fg = colors.orange },
 
 	-- CRITICAL: Prevent LSP semantic tokens from overriding punctuation
@@ -622,6 +622,7 @@ local highlight_groups = {
 	-- Rust specific LSP (rust-analyzer)
 	["@lsp.type.operator.rust"] = {},
 	["@lsp.type.punctuation.rust"] = {},
+	["@punctuation.special.rust"] = { fg = colors.blue_param },
 	["@lsp.type.bracket.rust"] = {},
 	["@lsp.type.builtinAttribute.rust"] = { fg = colors.ui_grey },
 	["@lsp.type.selfKeyword.rust"] = { fg = colors.ui_blue_light },

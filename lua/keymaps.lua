@@ -97,10 +97,6 @@ end, { desc = "Preview email/patch with delta-colorize" })
 
 -- Markdown preview command (replaces mdpls LSP config)
 vim.api.nvim_create_user_command("PreviewMarkdown", function()
-	if vim.bo.filetype ~= "markdown" then
-		vim.notify("Not a markdown file", vim.log.levels.WARN)
-		return
-	end
 	vim.lsp.start({
 		name = "mdpls",
 		cmd = { "mdpls" },
@@ -117,7 +113,7 @@ vim.api.nvim_create_user_command("PreviewMarkdown", function()
 end, { desc = "Start markdown preview via mdpls" })
 
 vim.api.nvim_create_user_command("PreviewMarkdownStop", function()
-    for _, client in ipairs(vim.lsp.get_clients({ name = "mdpls" })) do
-        client:stop()
-    end
+	for _, client in ipairs(vim.lsp.get_clients({ name = "mdpls" })) do
+		client:stop()
+	end
 end, { desc = "Stop markdown preview" })

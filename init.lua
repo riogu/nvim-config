@@ -55,6 +55,13 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	command = "setfiletype mail",
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "*",
+  callback = function()
+    vim.opt_local.formatoptions:remove("l")
+  end,
+})
+
 vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function()
 		if #vim.lsp.get_clients({ bufnr = 0 }) == 0 then

@@ -156,6 +156,7 @@ return {
 		opts = {
 			window = {
 				backdrop = 0.95,
+				width = 100,
 			},
 			-- your configuration comes here
 			-- or leave it empty to use the default settings
@@ -182,10 +183,15 @@ return {
 			require("diffview").setup({
 				view = {
 					merge_tool = {
-						layout = "diff3_vertical",
+						layout = "diff3_mixed",
 					},
 				},
 			})
 		end,
+	},
+	{
+		"pmizio/typescript-tools.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+		opts = {},
 	},
 }
