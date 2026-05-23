@@ -18,9 +18,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 vim.api.nvim_create_autocmd("FileType", {
-  callback = function()
-    pcall(vim.treesitter.start)
-  end,
+	callback = function()
+		pcall(vim.treesitter.start)
+	end,
 })
 
 -- Setup lazy.nvim
@@ -47,6 +47,8 @@ vim.filetype.add({
 		hfs = "cpp",
 		fm = "rs",
 		fs = "forth",
+		hfsir = "asm",
+		ebnf = "ebnf",
 	},
 })
 
@@ -56,10 +58,10 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "*",
-  callback = function()
-    vim.opt_local.formatoptions:remove("l")
-  end,
+	pattern = "*",
+	callback = function()
+		vim.opt_local.formatoptions:remove({ "l", "r", "o" })
+	end,
 })
 
 vim.api.nvim_create_autocmd("BufEnter", {

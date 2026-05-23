@@ -101,16 +101,16 @@ return {
 				filetypes = { "rust" },
 				root_markers = { "Cargo.toml", "rust-project.json" },
 				capabilities = capabilities,
-				settings = {
-					["rust-analyzer"] = {
-						check = { command = "clippy" },
-						inlayHints = {
-							bindingModeHints = { enable = true },
-							closureCaptureHints = { enable = true },
-							lifetimeElisionHints = { enable = "always" },
-						},
-					},
-				},
+				-- settings = {
+				-- 	["rust-analyzer"] = {
+				-- 		check = { command = "clippy" },
+				-- 		inlayHints = {
+				-- 			bindingModeHints = { enable = true },
+				-- 			closureCaptureHints = { enable = true },
+				-- 			lifetimeElisionHints = { enable = "always" },
+				-- 		},
+				-- 	},
+				-- },
 			}
 		end
 		vim.lsp.enable({ "clangd", "vue_ls", "rust_analyzer" })
