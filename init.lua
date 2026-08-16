@@ -73,4 +73,14 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	end,
 })
 
-vim.diagnostic.config({ virtual_text = true })
+
+vim.diagnostic.config({
+    virtual_text = {
+        source = false,
+        -- only show the primary message, drop multiline/related noise
+        format = function(diagnostic)
+            return diagnostic.message:gsub("\n.*", "") -- first line only
+        end,
+    },
+    virtual_lines = false,
+})

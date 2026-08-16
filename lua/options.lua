@@ -32,3 +32,5 @@ vim.o.cmdheight = 0
 
 -- 256 colors
 vim.o.termguicolors = true
+
+vim.g.editorconfig = false
