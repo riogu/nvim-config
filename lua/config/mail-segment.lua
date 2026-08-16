@@ -287,6 +287,92 @@ function M.segment(bufnr)
 	return segments
 end
 
+-- For 'foldmethod=expr': one fold per file section, from a "diff --git"
+-- line up to (but not including) the next one, at any quote depth --
+-- simple by design, not per-@@ hunk. Folding by hunk or by code/prose
+-- segment (e.g. to show just the replies) can reuse this same mechanism
+-- later if wanted.
+function M.foldexpr()
+	local lnum = vim.v.lnum
+	local _, payload = strip_quote(vim.fn.getline(lnum))
+	if payload:match("^diff %-%-git ") then
+		return ">1"
+	end
+	return "="
+end
+
+-- Jump to the start of the next/previous prose segment at a specific quote
+-- depth -- "a maintainer's reply comment" and "a prose segment
+-- mail-segment already identified" are the same thing, so this reuses
+-- M.segment() rather than re-deriving quote-depth transitions by hand:
+-- it's already handled the messy cases (wrapped lines, a same-depth
+-- comment interleaved mid-hunk, hysteresis). depth 0 is "no >>>" at all,
+-- i.e. the most recent reply in the thread; depth 1 is one level of
+-- quoting back, and so on -- matching ]1/[1, ]2/[2, ... bound in
+-- mail-syntax.lua. Pass depth = nil to match a prose segment at any
+-- depth. direction is 1 (forward) or -1 (back). On a buffer with no
+-- quoting at all (e.g. a bare .patch file), there's normally just one
+-- depth-0 prose segment (the commit message) if any, so ]1/[1 naturally
+-- does "not much" there, same as the caller expects.
+function M.jump_to_reply(bufnr, direction, depth)
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
+	local cur = vim.api.nvim_win_get_cursor(0)[1]
+	local segments = M.segment(bufnr)
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	-- A prose segment's own start_line is often the blank separator line
+	-- right before the reply text (that blank line belongs to the segment
+	-- too, at the same depth/kind); land on its first non-blank line
+	-- instead so the cursor ends up on the actual comment, not just above it.
+	-- A segment can also be *entirely* blank -- e.g. a lone blank line
+	-- sitting between two differently-quoted blocks gets its own
+	-- depth/kind and technically counts as "prose" -- which has nothing
+	-- worth landing on, so return nil and let the caller skip it rather
+	-- than stopping on empty whitespace.
+	local function landing_line(seg)
+		for l = seg.start_line, seg.end_line do
+			if not lines[l]:match("^%s*$") then
+				return l
+			end
+		end
+		return nil
+	end
+
+	local function matches(seg)
+		return seg.kind == "prose" and (depth == nil or seg.depth == depth)
+	end
+
+	if direction > 0 then
+		for _, seg in ipairs(segments) do
+			if matches(seg) and seg.start_line > cur then
+				local ll = landing_line(seg)
+				if ll then
+					vim.api.nvim_win_set_cursor(0, { ll, 0 })
+					return true
+				end
+			end
+		end
+	else
+		for i = #segments, 1, -1 do
+			local seg = segments[i]
+			-- end_line < cur, not start_line: if the cursor is inside the
+			-- current prose segment (not at its very first line), that
+			-- segment must not count as "previous", or [N would just land
+			-- back on the segment it's already in and never advance.
+			if matches(seg) and seg.end_line < cur then
+				local ll = landing_line(seg)
+				if ll then
+					vim.api.nvim_win_set_cursor(0, { ll, 0 })
+					return true
+				end
+			end
+		end
+	end
+
+	vim.notify("No more mail replies in that direction", vim.log.levels.INFO)
+	return false
+end
+
 vim.api.nvim_create_user_command("MailSegmentDebug", function()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)

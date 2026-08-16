@@ -146,6 +146,33 @@ vim.api.nvim_create_autocmd("FileType", {
 				vim.opt_local.wrap = true
 				vim.opt_local.linebreak = true
 				vim.opt_local.textwidth = 72
+
+				-- One fold per file section ("diff --git" up to the next one).
+				-- foldlevel=99 keeps folds available without auto-closing any of
+				-- them on open, since folds aren't part of the normal workflow here
+				-- -- just a tool for when they're wanted.
+				vim.opt_local.foldmethod = "expr"
+				vim.opt_local.foldexpr = "v:lua.require'config.mail-segment'.foldexpr()"
+				vim.opt_local.foldlevel = 99
+
+				-- ]1/[1 jump to the next/previous reply with no ">>>" at all
+				-- (depth 0 -- the most recent reply in the thread); ]2/[2 jump
+				-- one quote level back (depth 1), ]3/[3 two levels back, and so
+				-- on, mirroring gitsigns' ]c/[c UX but keyed by depth instead of
+				-- just "next comment in document order" (document order jumps
+				-- into older, more-quoted replies just as readily as newer ones,
+				-- which isn't what's wanted here). Mostly a no-op on a bare
+				-- .patch buffer (no quoting to interrupt), which is expected.
+				local mail_segment = require("config.mail-segment")
+				for n = 1, 9 do
+					local depth = n - 1
+					vim.keymap.set("n", "]" .. n, function()
+						mail_segment.jump_to_reply(bufnr, 1, depth)
+					end, { buffer = bufnr, desc = "Next mail reply (depth " .. depth .. ")" })
+					vim.keymap.set("n", "[" .. n, function()
+						mail_segment.jump_to_reply(bufnr, -1, depth)
+					end, { buffer = bufnr, desc = "Previous mail reply (depth " .. depth .. ")" })
+				end
 			end, 50)
 		end)
 	end,

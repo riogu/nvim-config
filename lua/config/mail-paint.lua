@@ -44,7 +44,11 @@ local function ensure_highlights()
 	-- file-style/file-decoration-style in ~/.gitconfig (bold, underlined,
 	-- yellow). We can't hide the raw lines the way delta rewrites its
 	-- output, so this is the closest single-line equivalent.
-	vim.api.nvim_set_hl(0, "MailFileHeader", { fg = "#FCBF55", bold = true, underline = true })
+	-- No bold here (unlike MailHunkHeader/etc): the "Δ" glyph + left-margin
+	-- wash already carry the "this is a boundary" signal, and this line is
+	-- often a long path -- bold+underline+bright yellow on the whole thing
+	-- ends up shouting for attention it doesn't need to be useful.
+	vim.api.nvim_set_hl(0, "MailFileHeader", { fg = "#FCBF55", underline = true })
 	-- Marker-only variants (no underline) for the "┃"/"Δ" glyphs
 	-- paint_block_marker/paint_file_header prefix each line with -- an
 	-- underlined "┃" reads as a line drawn *through* the pipe character,
