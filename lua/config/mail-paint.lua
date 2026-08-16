@@ -24,30 +24,47 @@ local function ensure_highlights()
 	-- Full-row tints for +/- lines (delta's plus-style/minus-style).
 	vim.api.nvim_set_hl(0, "MailDiffAddedBg", { bg = "#2a3a35" })
 	vim.api.nvim_set_hl(0, "MailDiffRemovedBg", { bg = "#3a2f32" })
-	-- Hunk-range accent ("@@ -A,B +C,D @@", delta's hunk-header-style).
-	-- No background -- real delta's own rendering is text-only here, no
-	-- loud wash -- underlined instead, same restrained treatment as the
-	-- file-section marker below. Underline is scoped to just the range
-	-- spec (not the trailing function-context, which gets real cpp
-	-- captures at higher priority that would otherwise fully override --
-	-- not merge with -- this underline for whatever they cover).
+	-- Hunk-range accent ("@@ -A,B +C,D @@", delta's hunk-header-style),
+	-- underlined the whole way to end of line, including the trailing
+	-- function-context text -- that part gets real cpp captures for its
+	-- own fg color, so its underline comes from MailHunkHeaderUnderline
+	-- (below) *stacked* alongside each capture instead of competing with
+	-- it: overlapping extmarks are winner-take-all per attribute, not
+	-- additive, so a plain underlined group here would just lose its
+	-- underline wherever a capture's own (higher-priority, no-underline)
+	-- group covers the same span. See paint_captures' extra_hl param.
 	vim.api.nvim_set_hl(0, "MailHunkHeader", { fg = "#567CC6", bold = true, underline = true })
-	-- The "-A,B" / "+C,D" range numbers inside the header (delta's
-	-- line-numbers-minus-style/line-numbers-plus-style).
 	vim.api.nvim_set_hl(0, "MailHunkRangeMinus", { fg = "#e35c5c", bold = true, underline = true })
 	vim.api.nvim_set_hl(0, "MailHunkRangePlus", { fg = "#589A8F", bold = true, underline = true })
+	-- No fg/bg of its own -- exists purely to contribute "underline, blue"
+	-- when stacked under a capture's own color (see paint_hunk_header).
+	vim.api.nvim_set_hl(0, "MailHunkHeaderUnderline", { underline = true, sp = "#567CC6" })
 	-- File-section marker ("diff --git a/x b/x"): delta collapses this
 	-- plus "index .../"---"/"+++" into one "Δ path" line, styled per
 	-- file-style/file-decoration-style in ~/.gitconfig (bold, underlined,
 	-- yellow). We can't hide the raw lines the way delta rewrites its
 	-- output, so this is the closest single-line equivalent.
 	vim.api.nvim_set_hl(0, "MailFileHeader", { fg = "#FCBF55", bold = true, underline = true })
+	-- Marker-only variants (no underline) for the "┃"/"Δ" glyphs
+	-- paint_block_marker/paint_file_header prefix each line with -- an
+	-- underlined "┃" reads as a line drawn *through* the pipe character,
+	-- which looks wrong, so the glyph itself always uses these instead of
+	-- the text groups above.
+	vim.api.nvim_set_hl(0, "MailFileHeaderMarker", { fg = "#FCBF55", bold = true })
+	vim.api.nvim_set_hl(0, "MailHunkHeaderMarker", { fg = "#567CC6", bold = true })
 	-- Diffstat bar ("path/to/file.cc | 69 ++++++++----") and the
 	-- "N files changed, X insertions(+), Y deletions(-)" summary: same
 	-- green/red as the diff line backgrounds, applied per-character to
 	-- just the +/- runs.
 	vim.api.nvim_set_hl(0, "MailDiffstatPlus", { fg = "#589A8F" })
 	vim.api.nvim_set_hl(0, "MailDiffstatMinus", { fg = "#e35c5c" })
+	vim.api.nvim_set_hl(0, "MailCursorLine", { bg = "#3A4356" })
+	-- Soft full-row wash across the *entire* header block (every "diff
+	-- --git"/"index"/"---"/"+++"/"@@ ... @@" line, whichever of those
+	-- actually appear), same idea as the add/remove diff-line backgrounds
+	-- but dimmer -- editor bg blended only ~12% toward hunk-header blue,
+	-- vs. ~18% for the old single-line MailHunkHeaderBg attempt.
+	vim.api.nvim_set_hl(0, "MailHeaderBlockBg", { bg = "#343C4D" })
 end
 
 -- Neovim's own vim.treesitter.highlighter resolves overlapping captures at
@@ -142,7 +159,19 @@ end
 -- caller tracked). Shared by paint_side (multi-line hunk body, row_map
 -- table) and paint_hunk_header (single-line function-context fragment,
 -- fixed offset).
-local function paint_captures(bufnr, text, hl_query, map_fn)
+--
+-- extra_hl, if given, is an *additional* highlight group name stacked
+-- underneath each capture's own group via nvim_buf_set_extmark's hl_group
+-- array form ({extra_hl, "@capture"}, highest-priority last per the API
+-- docs). This is how the @@ header's underline survives under the real
+-- cpp token colors: overlapping extmarks are winner-take-all per
+-- attribute, not additive, so a separate underlined extmark at any
+-- priority would just lose its underline wherever a capture's own
+-- (higher-priority, no-underline) group covers the same span. Stacking
+-- within *one* extmark's hl_group list is the documented way around that
+-- -- extra_hl contributes underline+sp, the capture's own group
+-- (listed last, so it wins ties) still supplies the fg color.
+local function paint_captures(bufnr, text, hl_query, map_fn, extra_hl)
 	if text == "" then
 		return
 	end
@@ -163,10 +192,11 @@ local function paint_captures(bufnr, text, hl_query, map_fn)
 		-- bookkeeping for predicates, not meant to be highlighted --
 		-- vim.treesitter.highlighter skips these the same way.
 		if start_lnum0 and end_lnum0 and not capture_name:match("^_") then
+			local hl_group = "@" .. capture_name
 			vim.api.nvim_buf_set_extmark(bufnr, ns, start_lnum0, start_col, {
 				end_row = end_lnum0,
 				end_col = end_col,
-				hl_group = "@" .. capture_name,
+				hl_group = extra_hl and { extra_hl, hl_group } or hl_group,
 				priority = capture_priority(metadata, id),
 			})
 		end
@@ -234,7 +264,7 @@ local function paint_hunk_header(bufnr, lnum, raw, hl_query)
 				return nil
 			end
 			return lnum - 1, col + context_col_offset
-		end)
+		end, "MailHunkHeaderUnderline")
 	end
 end
 
@@ -307,9 +337,48 @@ local function paint_file_header(bufnr, lnum, raw)
 		end_row = lnum - 1,
 		end_col = #raw,
 		hl_group = "MailFileHeader",
-		virt_text = { { "Δ ", "MailFileHeader" } },
+		-- Marker glyph uses the non-underlined variant -- an underlined
+		-- "Δ" reads as a line drawn through the glyph, same problem as
+		-- the "┃" markers (see paint_block_marker).
+		virt_text = { { "Δ ", "MailFileHeaderMarker" } },
 		virt_text_pos = "inline",
 		priority = 200,
+	})
+end
+
+-- A "┃ " left-edge marker so a whole header block reads as one connected
+-- group while scrolling fast through a long patch, not just its first
+-- line -- "diff --git" gets its own "Δ " glyph above (paint_file_header),
+-- this extends the same color down "index"/"---"/"+++" so the block
+-- still reads as one thing after that first line scrolls by, and colors
+-- "@@ ... @@" hunk lines with the hunk-blue instead so the two kinds of
+-- structural marker share one visual vocabulary (a bar in the margin
+-- means "boundary here") while staying distinguishable by color.
+local function paint_block_marker(bufnr, lnum, raw, hl_group)
+	local _, payload = segment.strip_quote(raw)
+	local prefix_len = #raw - #payload
+	vim.api.nvim_buf_set_extmark(bufnr, ns, lnum - 1, prefix_len, {
+		virt_text = { { "┃ ", hl_group } }, -- caller passes the *Marker (non-underlined) variant
+		virt_text_pos = "inline",
+		priority = 200,
+	})
+end
+
+-- Soft full-row wash (MailHeaderBlockBg) for any header line -- "diff
+-- --git"/"index"/"---"/"+++"/"@@ ... @@" -- whichever actually appear.
+-- No contiguity tracking needed: every one of these five line shapes is
+-- inherently "part of a header" on its own, so a standalone "@@ ... @@"
+-- with no preceding "diff --git" (e.g. re-quoted by itself further down
+-- a thread) still gets exactly its own line colored, nothing more.
+local function paint_header_block_bg(bufnr, lnum, raw)
+	local _, payload = segment.strip_quote(raw)
+	local prefix_len = #raw - #payload
+	vim.api.nvim_buf_set_extmark(bufnr, ns, lnum - 1, prefix_len, {
+		line_hl_group = "MailHeaderBlockBg",
+		end_row = lnum - 1,
+		end_col = #raw,
+		hl_eol = true,
+		priority = 100,
 	})
 end
 
@@ -385,15 +454,25 @@ local function paint_segment(bufnr, lines, seg, hl_query)
 		local raw = lines[lnum]
 		local _, payload = segment.strip_quote(raw)
 		if segment.is_structural(payload) then
-			-- "@@ ... @@" gets the hunk-range treatment; "diff --git"
-			-- becomes the file-section marker; diffstat lines/summary get
-			-- their +/- runs accented. "index"/"---"/"+++" are left
-			-- alone, matching how delta consolidates them into the single
-			-- file marker above and doesn't show them distinctly at all.
+			-- "@@ ... @@" gets the hunk-range treatment plus a blue block
+			-- marker; "diff --git" becomes the file-section marker;
+			-- "index"/"---"/"+++" get the same marker in the file-header
+			-- yellow, so the whole 4-line block reads as one connected
+			-- group while scrolling, not just its first line; diffstat
+			-- lines/summary get their +/- runs accented. All five of the
+			-- structural line shapes (not diffstat) also get the soft
+			-- header-block background, whether or not they're actually
+			-- adjacent to the rest of their block.
 			if payload:match("^@@ ") then
 				paint_hunk_header(bufnr, lnum, raw, hl_query)
+				paint_block_marker(bufnr, lnum, raw, "MailHunkHeaderMarker")
+				paint_header_block_bg(bufnr, lnum, raw)
 			elseif payload:match("^diff %-%-git ") then
 				paint_file_header(bufnr, lnum, raw)
+				paint_header_block_bg(bufnr, lnum, raw)
+			elseif payload:match("^index ") or payload:match("^%-%-%- ") or payload:match("^%+%+%+ ") then
+				paint_block_marker(bufnr, lnum, raw, "MailFileHeaderMarker")
+				paint_header_block_bg(bufnr, lnum, raw)
 			elseif segment.is_diffstat_line(payload) then
 				paint_diffstat_line(bufnr, lnum, raw)
 			elseif segment.is_diffstat_summary(payload) then
@@ -512,8 +591,13 @@ end
 -- Turn on live, scroll-scoped painting for `bufnr`.
 function M.enable_live(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
+	ensure_highlights()
 	live_enabled[bufnr] = true
 	ensure_provider()
+
+	-- Scoped to the current window only, not the global colorscheme --
+	-- :append so any winhighlight another plugin already set stays intact.
+	vim.opt_local.winhighlight:append("CursorLine:MailCursorLine")
 end
 
 function M.disable_live(bufnr)
