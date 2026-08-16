@@ -1,18 +1,11 @@
--- Step 1 of the "real C++ inside diffs" rework: classify every buffer line
--- as code or prose, per quote depth, before any painting happens.
---
--- This is deliberately NOT wired into any FileType autocmd yet. It's a
--- standalone module you drive manually (or via :MailSegmentDebug) to
--- validate classification quality against real threads before we build a
--- treesitter/extmark painter on top of it. See the design discussion in
--- conversation history for the full architecture; this file is just the
--- per-line scorer + hysteresis smoother + segment coalescer.
+-- Classifies each buffer line as code or prose per quote depth, before
+-- mail-paint.lua paints anything on top. Also provides the fold and
+-- reply-navigation helpers built on that same classification.
 
 local M = {}
 
--- Strip leading quote markers ("> ", ">> > ", "> > > ", ...), tolerating
--- spaces between arrows same as the mail-syntax.lua region patterns.
--- Returns depth (number of '>' seen) and the remaining payload.
+-- Strip leading quote markers (">", ">> >", ...), tolerating spaces
+-- between arrows. Returns depth (number of '>') and the remaining payload.
 local function strip_quote(line)
 	local depth = 0
 	local rest = line
@@ -28,16 +21,8 @@ local function strip_quote(line)
 end
 M.strip_quote = strip_quote
 
--- Deliberately NOT scoring "if"/"for"/"return"/"static"/"class"/etc as a
--- code signal: this is a C++ mailing list, so plain English sentences use
--- these words constantly ("so *for* expr == ...", "a *static* analysis
--- tool", "the *class* hierarchy"). Punctuation (;{}()::->) and
--- ALL_CAPS_WITH_UNDERSCORE tokens are far more reliably code-only in
--- human-written prose, so those carry the code signal instead.
-
--- Lines that are structurally blank after stripping quote/diff markers:
--- "", ">", ">   ", "+ ", "- ", etc. Treated as a paragraph/statement-block
--- boundary (see classify_buffer) rather than scored either way.
+-- A line blank after stripping quote/diff markers: "", ">", "+ ", "- ".
+-- Treated as a paragraph/statement-block boundary, not scored either way.
 local function is_blank(payload)
 	if payload:match("^%s*$") then
 		return true
@@ -49,26 +34,22 @@ local function is_blank(payload)
 	return false
 end
 
--- "path/to/file.cc | 123 +++++++------": a `git format-patch`/diffstat
--- summary line, e.g. the block above "Signed-off-by:" or after a bare
--- "---". Exported separately from is_structural since mail-paint needs to
--- re-parse the +/- run itself to color it.
+-- "path/to/file.cc | 123 +++++++------": a diffstat summary row. Exported
+-- separately since mail-paint re-parses the +/- run itself to color it.
 local function is_diffstat_line(payload)
 	return payload:match("^%s*[%w_./%-]+%s+|%s+%d+%s+[+%-]*%s*$") ~= nil
 end
 M.is_diffstat_line = is_diffstat_line
 
--- "8 files changed, 627 insertions(+), 37 deletions(-)": the summary line
--- that closes a diffstat block.
+-- "8 files changed, 627 insertions(+), 37 deletions(-)": closes a diffstat block.
 local function is_diffstat_summary(payload)
 	return payload:match("^%s*%d+ files? changed") ~= nil
 end
 M.is_diffstat_summary = is_diffstat_summary
 
--- Structural diff headers: unambiguous, force state to "code" and bypass
--- hysteresis entirely -- but only ever used as a strong hint, never as the
--- thing that *ends* a hunk (a maintainer's comment or a deleted line can't
--- be detected this way, which is why we still classify every line).
+-- Unambiguous diff headers: force state to "code". Only ever used as a
+-- hint, never as what *ends* a hunk -- a maintainer's comment or a deleted
+-- line can't be detected this way, so every line still gets classified.
 local function is_structural(payload)
 	return payload:match("^diff %-%-git ") ~= nil
 		or payload:match("^index ")
@@ -80,25 +61,26 @@ local function is_structural(payload)
 end
 M.is_structural = is_structural
 
--- "On <date>, X wrote:" marks the start of a new quoted message. Quote
--- depth is only a meaningful continuous signal *within* one logical
--- message -- a thread view or a multi-message paste (like this file) can
--- have several unrelated messages back to back, each restarting what
--- depth 1/2/3 mean, so state from the previous message must not leak in.
+-- "On <date>, X wrote:": starts a new quoted message. Quote depth only
+-- means one consistent thing *within* a message, so this resets tracked
+-- state everywhere rather than let a previous message's hunk state leak in.
 local function is_attribution(payload)
 	return payload:match("^On .* wrote:%s*$") ~= nil
 end
 
--- Score one payload line: positive = looks like code, negative = looks
--- like prose, 0 = neutral/blank (inherits whatever state we're in).
+-- Score one payload line: positive = looks like code, negative = prose,
+-- 0 = neutral/blank (inherits whatever state we're in). Deliberately does
+-- NOT score keywords like if/for/class/static as code signal -- this is a
+-- C++ mailing list, so prose uses those words constantly. Punctuation
+-- (;{}()::->) and ALL_CAPS_WITH_UNDERSCORE identifiers are more reliably
+-- code-only in human-written prose, so those carry the signal instead.
 local function score_line(payload)
 	if is_blank(payload) then
 		return 0
 	end
 
-	-- git-send-email scissors line and the standard "-- " signature
-	-- delimiter: neither is code, but both start with '-' so they'd
-	-- otherwise pick up the diff-marker nudge below.
+	-- git-send-email scissors line / "-- " signature delimiter: not code,
+	-- but both start with '-' so they'd pick up the diff-marker nudge below.
 	if payload:match("^%-%- >8 %-%-%s*$") or payload:match("^%-%-%s*$") then
 		return 0
 	end
@@ -111,8 +93,8 @@ local function score_line(payload)
 		return 0
 	end
 
-	-- A "-"/"+" line whose payload is prose is a maintainer comment or a
-	-- signature, not a diff line -- e.g. "- I don't think this is right".
+	-- A "-"/"+" line whose payload reads as prose is a maintainer comment
+	-- or a signature, not a diff line -- e.g. "- I don't think this is right".
 	local prose_score = 0
 	if inner:match("^%s*%u") and inner:match("[%.%?!]%s*$") then
 		prose_score = prose_score + 2
@@ -120,9 +102,8 @@ local function score_line(payload)
 	if inner:match("^%s*On .* wrote:%s*$") then
 		prose_score = prose_score + 3
 	end
-	-- Long runs of words (contractions like "don't" included) with spaces
-	-- and no code punctuation read as prose even without terminal
-	-- punctuation (mid-sentence wrapped lines, question fragments, etc).
+	-- Long word runs with no code punctuation read as prose even without
+	-- terminal punctuation (mid-sentence wrapped lines, question fragments).
 	local word_run = inner:match("^%s*[%a']+%s+[%a']+%s+[%a']+%s+[%a']+")
 	local has_code_punct = inner:find("[;{}()]") or inner:find("::") or inner:find("%->")
 	if word_run and not has_code_punct then
@@ -139,11 +120,9 @@ local function score_line(payload)
 	if inner:find("%(") and inner:find("%)") then
 		code_score = code_score + 1
 	end
-	-- A bare "BINFO_OFFSET"/"NULL_TREE"-shaped identifier is *not* code
-	-- evidence on its own -- prose about this codebase mentions macro and
-	-- constant names constantly ("the usage of BINFO_OFFSET is ..."). Only
-	-- count it when it's next to actual code punctuation corroborating
-	-- that this is a real reference, not a passing mention.
+	-- A bare "BINFO_OFFSET"-shaped identifier isn't code evidence on its
+	-- own -- prose mentions macro/constant names constantly. Only count it
+	-- alongside actual code punctuation corroborating a real reference.
 	if has_code_punct and (inner:match("%u%u+_[%u%d_]*") or inner:match("[%u][%u%d_][%u%d_]+")) then
 		code_score = code_score + 1
 	end
@@ -161,9 +140,13 @@ local function score_line(payload)
 end
 
 -- Classify every line of the buffer. Returns an array of
--- { lnum, depth, kind = "code"|"prose", score }, 1-indexed.
--- State is tracked independently per quote depth so an interleaved reply
--- at one depth doesn't reset the hunk state of the depth above/below it.
+-- { lnum, depth, kind = "code"|"prose", score }, 1-indexed. State is
+-- tracked independently per quote depth so an interleaved reply at one
+-- depth doesn't reset the hunk state of the depth above/below it. A
+-- line's score only flips the tracked state after two consecutive
+-- contradicting lines (contrary_count >= 2), which then retroactively
+-- relabels the whole pending run -- this absorbs one-off ambiguous lines
+-- instead of flip-flopping on every neutral or borderline line.
 function M.classify_buffer(bufnr)
 	bufnr = bufnr or 0
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
@@ -179,10 +162,8 @@ function M.classify_buffer(bufnr)
 		return st
 	end
 
-	-- Resolve every record currently sitting in st.pending to `state` and
-	-- clear the run. Used both when a flip is confirmed (resolve to the NEW
-	-- state) and when a run turns out to have been a false alarm (resolve
-	-- to the state it never actually left).
+	-- Resolve every record in st.pending to `state` and clear the run --
+	-- used both when a flip is confirmed and when a run was a false alarm.
 	local function flush(st, state)
 		for _, rec in ipairs(st.pending) do
 			rec.kind = state
@@ -197,9 +178,6 @@ function M.classify_buffer(bufnr)
 		results[i] = rec
 
 		if is_attribution(payload) then
-			-- New message starts here: whatever "code" state a deeper
-			-- quote level was in belongs to a different message's hunk,
-			-- not this one. Wipe every depth's state, not just this line's.
 			state_by_depth = {}
 			rec.kind = "prose"
 			rec.score = -3
@@ -214,13 +192,9 @@ function M.classify_buffer(bufnr)
 			rec.kind = "code"
 			rec.score = 3
 		elseif is_blank(payload) then
-			-- Paragraph/statement-block boundary: resolve whatever's
-			-- pending now instead of letting ambiguity drift across it.
-			-- Genuinely wrapped prose is *always* blank-line-delimited in
-			-- plain-text mail, so this bounds how far a run of neutral or
-			-- weakly-scored lines (which wrapped prose produces a lot of,
-			-- since only a paragraph's last line usually ends in
-			-- punctuation) can drift before getting resolved.
+			-- Paragraph boundary: resolve pending now rather than let
+			-- ambiguity drift further (wrapped prose is always
+			-- blank-delimited in plain-text mail).
 			flush(st, st.state)
 			rec.kind = st.state
 			rec.score = 0
@@ -229,22 +203,15 @@ function M.classify_buffer(bufnr)
 			rec.score = score
 
 			if score == 0 then
-				-- Neutral: park it in the run so it gets relabeled
-				-- along with its neighbors if they end up flipping.
 				table.insert(st.pending, rec)
 			elseif (score > 0) == (st.state == "code") then
-				-- Agrees with current state: whatever was pending was an
-				-- unconfirmed blip, resolve it to the state it never left.
+				-- Agrees with current state: pending was an unconfirmed blip.
 				flush(st, st.state)
 				rec.kind = st.state
 			else
-				-- Contradicts current state.
 				table.insert(st.pending, rec)
 				st.contrary_count = st.contrary_count + 1
 				if st.contrary_count >= 2 then
-					-- Confirmed: retroactively relabel the whole run
-					-- (including any neutral lines caught inside it), not
-					-- just the lines from this point forward.
 					st.state = (score > 0) and "code" or "prose"
 					flush(st, st.state)
 				end
@@ -287,48 +254,32 @@ function M.segment(bufnr)
 	return segments
 end
 
--- For 'foldmethod=expr': one fold per file section, from a "diff --git"
--- line up to (but not including) the next one, at any quote depth --
--- simple by design, not per-@@ hunk. Folding by hunk or by code/prose
--- segment (e.g. to show just the replies) can reuse this same mechanism
--- later if wanted.
+-- foldexpr: one fold per file section, starting a new fold at each
+-- "diff --git" line (any quote depth) up to the next one. Not per-@@ hunk.
 function M.foldexpr()
-	local lnum = vim.v.lnum
-	local _, payload = strip_quote(vim.fn.getline(lnum))
+	local _, payload = strip_quote(vim.fn.getline(vim.v.lnum))
 	if payload:match("^diff %-%-git ") then
 		return ">1"
 	end
 	return "="
 end
 
--- Jump to the start of the next/previous prose segment at a specific quote
--- depth -- "a maintainer's reply comment" and "a prose segment
--- mail-segment already identified" are the same thing, so this reuses
--- M.segment() rather than re-deriving quote-depth transitions by hand:
--- it's already handled the messy cases (wrapped lines, a same-depth
--- comment interleaved mid-hunk, hysteresis). depth 0 is "no >>>" at all,
--- i.e. the most recent reply in the thread; depth 1 is one level of
--- quoting back, and so on -- matching ]1/[1, ]2/[2, ... bound in
--- mail-syntax.lua. Pass depth = nil to match a prose segment at any
--- depth. direction is 1 (forward) or -1 (back). On a buffer with no
--- quoting at all (e.g. a bare .patch file), there's normally just one
--- depth-0 prose segment (the commit message) if any, so ]1/[1 naturally
--- does "not much" there, same as the caller expects.
+-- Jump to the start of the next/previous prose segment at an exact quote
+-- depth: depth 0 is unquoted (the most recent reply in the thread), depth
+-- 1 is one level of quoting back, and so on -- matching ]1/[1, ]2/[2, ...
+-- in mail-syntax.lua. Pass depth = nil to match any depth. direction is 1
+-- (forward) or -1 (back).
 function M.jump_to_reply(bufnr, direction, depth)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	local cur = vim.api.nvim_win_get_cursor(0)[1]
 	local segments = M.segment(bufnr)
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
-	-- A prose segment's own start_line is often the blank separator line
-	-- right before the reply text (that blank line belongs to the segment
-	-- too, at the same depth/kind); land on its first non-blank line
-	-- instead so the cursor ends up on the actual comment, not just above it.
-	-- A segment can also be *entirely* blank -- e.g. a lone blank line
-	-- sitting between two differently-quoted blocks gets its own
-	-- depth/kind and technically counts as "prose" -- which has nothing
-	-- worth landing on, so return nil and let the caller skip it rather
-	-- than stopping on empty whitespace.
+	-- A segment's start_line is often a blank separator line rather than
+	-- its actual text; land on the first non-blank line instead. Returns
+	-- nil for a segment that's blank throughout (e.g. a lone blank line
+	-- sandwiched between two differently-quoted blocks), so the caller
+	-- skips it rather than stopping on empty whitespace.
 	local function landing_line(seg)
 		for l = seg.start_line, seg.end_line do
 			if not lines[l]:match("^%s*$") then
@@ -356,9 +307,8 @@ function M.jump_to_reply(bufnr, direction, depth)
 		for i = #segments, 1, -1 do
 			local seg = segments[i]
 			-- end_line < cur, not start_line: if the cursor is inside the
-			-- current prose segment (not at its very first line), that
-			-- segment must not count as "previous", or [N would just land
-			-- back on the segment it's already in and never advance.
+			-- current segment, it must not count as "previous" or this
+			-- would just land back where the cursor already is.
 			if matches(seg) and seg.end_line < cur then
 				local ll = landing_line(seg)
 				if ll then
@@ -384,10 +334,7 @@ vim.api.nvim_create_user_command("MailSegmentDebug", function()
 		if #text > 60 then
 			text = text:sub(1, 57) .. "..."
 		end
-		table.insert(
-			out,
-			string.format("%4d d%d %-4s %+2d  %s", c.lnum, c.depth, c.kind, c.score, text)
-		)
+		table.insert(out, string.format("%4d d%d %-4s %+2d  %s", c.lnum, c.depth, c.kind, c.score, text))
 	end
 
 	vim.cmd("botright new")
