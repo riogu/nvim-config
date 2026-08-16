@@ -75,25 +75,25 @@ vim.keymap.set("n", "<leader>pl", function()
 	end
 end, { desc = "[P]lugin [L]og" })
 
--- Preview email/patch files with delta-colorize
-vim.keymap.set("n", "<C-p>", function()
-	local current_file = vim.fn.expand("%:p")
-
-	-- If no file name, write to temp file
-	if current_file == "" then
-		current_file = vim.fn.tempname()
-		vim.cmd("write! " .. vim.fn.fnameescape(current_file))
-	else
-		vim.cmd("write")
-	end
-
-	-- Open preview in new tab
-	vim.cmd("tabnew")
-	vim.cmd("terminal cat " .. vim.fn.shellescape(current_file) .. " | ~/.config/aerc/filters/delta-colorize")
-
-	-- Map q to close the preview tab
-	vim.keymap.set("n", "q", ":tabclose<CR>", { buffer = true })
-end, { desc = "Preview email/patch with delta-colorize" })
+-- -- Preview email/patch files with delta-colorize
+-- vim.keymap.set("n", "<C-p>", function()
+-- 	local current_file = vim.fn.expand("%:p")
+--
+-- 	-- If no file name, write to temp file
+-- 	if current_file == "" then
+-- 		current_file = vim.fn.tempname()
+-- 		vim.cmd("write! " .. vim.fn.fnameescape(current_file))
+-- 	else
+-- 		vim.cmd("write")
+-- 	end
+--
+-- 	-- Open preview in new tab
+-- 	vim.cmd("tabnew")
+-- 	vim.cmd("terminal cat " .. vim.fn.shellescape(current_file) .. " | ~/.config/aerc/filters/delta-colorize")
+--
+-- 	-- Map q to close the preview tab
+-- 	vim.keymap.set("n", "q", ":tabclose<CR>", { buffer = true })
+-- end, { desc = "Preview email/patch with delta-colorize" })
 
 -- Markdown preview command (replaces mdpls LSP config)
 vim.api.nvim_create_user_command("PreviewMarkdown", function()
