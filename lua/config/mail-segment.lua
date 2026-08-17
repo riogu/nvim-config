@@ -53,6 +53,8 @@ M.is_diffstat_summary = is_diffstat_summary
 local function is_structural(payload)
 	return payload:match("^diff %-%-git ") ~= nil
 		or payload:match("^index ")
+		or payload:match("^new file mode %d+$")
+		or payload:match("^deleted file mode %d+$")
 		or payload:match("^%-%-%- ")
 		or payload:match("^%+%+%+ ")
 		or payload:match("^@@ ")

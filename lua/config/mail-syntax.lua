@@ -121,8 +121,8 @@ vim.api.nvim_create_autocmd("FileType", {
 				setup_mail_colors(bufnr, colors, quote_colors)
 				require("config.mail-paint").enable_live(bufnr)
 
-				vim.opt_local.wrap = true
-				vim.opt_local.linebreak = true
+				-- Not forcing wrap/linebreak here -- respect whatever the
+				-- user has set globally (options.lua sets wrap=false).
 				vim.opt_local.textwidth = 72
 
 				-- One fold per file section ("diff --git" up to the next
