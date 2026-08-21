@@ -146,9 +146,9 @@ local highlight_groups = {
 	MatchParen = { fg = "NONE", bg = colors.bg_highlight },
 	EndOfBuffer = { fg = colors.bg_highlight, bg = colors.bg },
 	Colorcolumn = { link = "StatusLine" },
-	Whitespace = { bg = "NONE", fg = colors.ui_blue },
+	Whitespace = { bg = "NONE", fg = colors.line_nr },
 	NonText = { link = "Normal" },
-	SpecialKey = { fg = colors.comment },
+	SpecialKey = { fg = colors.line_nr },
 	Conceal = { link = "Operator" },
 	WildMenu = { link = "Pmenu" },
 
