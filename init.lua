@@ -32,9 +32,6 @@ require("lazy").setup({
 	change_detection = { notify = false },
 })
 
--- Load custom configurations
-require("config.mail-syntax")
-
 -- Autocommands
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
