@@ -92,7 +92,10 @@ vim.api.nvim_create_autocmd("StdinReadPost", {
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = augroup,
-	pattern = { "mail", "diff", "gitsendemail" },
+	-- "git" is what `git show`/`git log -p`/`git diff` render as when piped
+	-- through nvim as $GIT_PAGER; "gitcommit" is the commit-message buffer,
+	-- which carries a diff too under `git commit -v`'s scissors line.
+	pattern = { "mail", "diff", "gitsendemail", "git", "gitcommit" },
 	callback = function()
 		if vim.b.mail_syntax_loaded then
 			return

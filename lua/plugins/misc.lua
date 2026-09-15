@@ -156,7 +156,7 @@ return {
 		opts = {
 			window = {
 				backdrop = 0.95,
-				width = 100,
+				width = 115,
 			},
 			-- your configuration comes here
 			-- or leave it empty to use the default settings

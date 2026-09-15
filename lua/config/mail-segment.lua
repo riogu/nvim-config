@@ -97,18 +97,25 @@ local function score_line(payload)
 
 	-- A "-"/"+" line whose payload reads as prose is a maintainer comment
 	-- or a signature, not a diff line -- e.g. "- I don't think this is right".
+	-- ':' counts as terminal punctuation too: prose commonly introduces a
+	-- quote/list/example that way ("... in my reading list for this summer:").
 	local prose_score = 0
-	if inner:match("^%s*%u") and inner:match("[%.%?!]%s*$") then
+	if inner:match("^%s*%u") and inner:match("[%.%?!:]%s*$") then
 		prose_score = prose_score + 2
 	end
 	if inner:match("^%s*On .* wrote:%s*$") then
 		prose_score = prose_score + 3
 	end
-	-- Long word runs with no code punctuation read as prose even without
-	-- terminal punctuation (mid-sentence wrapped lines, question fragments).
+	-- Long word runs with no *strong* code punctuation read as prose even
+	-- without terminal punctuation (mid-sentence wrapped lines, question
+	-- fragments). A bare "()" doesn't disqualify this by itself -- GNU-style
+	-- code ("foo (bar)") and a plain parenthetical remark
+	-- ("book (among others)") look identical there, so only ;{}/::/->
+	-- (never bare parens alone) should override a clean word-run opener.
 	local word_run = inner:match("^%s*[%a']+%s+[%a']+%s+[%a']+%s+[%a']+")
-	local has_code_punct = inner:find("[;{}()]") or inner:find("::") or inner:find("%->")
-	if word_run and not has_code_punct then
+	local has_strong_code_punct = inner:find("[;{}]") or inner:find("::") or inner:find("%->")
+	local has_code_punct = has_strong_code_punct or (inner:find("%(") and inner:find("%)"))
+	if word_run and not has_strong_code_punct then
 		prose_score = prose_score + 1
 	end
 
@@ -123,9 +130,12 @@ local function score_line(payload)
 		code_score = code_score + 1
 	end
 	-- A bare "BINFO_OFFSET"-shaped identifier isn't code evidence on its
-	-- own -- prose mentions macro/constant names constantly. Only count it
-	-- alongside actual code punctuation corroborating a real reference.
-	if has_code_punct and (inner:match("%u%u+_[%u%d_]*") or inner:match("[%u][%u%d_][%u%d_]+")) then
+	-- own -- prose mentions macro/constant names constantly, short all-caps
+	-- acronyms (GCC, MIT, ABI, ...) very much included once any parens or
+	-- other code punctuation shows up elsewhere on the same line. Require
+	-- the underscored shape those acronyms never have, rather than any
+	-- all-caps run.
+	if has_code_punct and inner:match("%u%u+_[%u%d_]*") then
 		code_score = code_score + 1
 	end
 

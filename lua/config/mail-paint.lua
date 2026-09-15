@@ -190,6 +190,63 @@ local function build_side(bufnr_lines, start_line, end_line, side_marker)
 	return table.concat(virtual_lines, "\n"), row_map
 end
 
+-- "diff --git a/x.rs b/x.rs": a Rust file section, per its own header --
+-- everything else defaults to cpp (this pipeline is built for GCC mailing
+-- list review, so C++ is the only other language actually seen). A missing
+-- or wrapped/incomplete header (see is_incomplete_file_header) just falls
+-- through to the caller's default rather than trying to guess.
+local function detect_language(payload)
+	local path = payload:match("^diff %-%-git a/(.-) b/")
+	if path and path:match("%.rs$") then
+		return "rust"
+	end
+	return "cpp"
+end
+
+-- Per-buffer memory of the last file language seen across paint calls, so a
+-- code segment that resumes mid-hunk with no "diff --git" line of its own
+-- (the classifier flipped to prose and back without a new file boundary)
+-- still inherits the right language instead of silently reverting to cpp.
+local buffer_last_lang = {}
+
+-- Split [start_line, end_line] into per-file spans at each "diff --git"
+-- line, so build_side/paint_captures parse each file with its own language
+-- instead of treating a whole multi-file segment as one cpp blob.
+local function file_language_spans(bufnr, lines, start_line, end_line)
+	local spans = {}
+	local span_start = start_line
+	local lang = buffer_last_lang[bufnr] or "cpp"
+
+	for lnum = start_line, end_line do
+		local _, payload = segment.strip_quote(lines[lnum])
+		if payload:match("^diff %-%-git ") then
+			if lnum > span_start then
+				table.insert(spans, { start_line = span_start, end_line = lnum - 1, lang = lang })
+			end
+			lang = detect_language(payload)
+			span_start = lnum
+		end
+	end
+	table.insert(spans, { start_line = span_start, end_line = end_line, lang = lang })
+
+	buffer_last_lang[bufnr] = lang
+	return spans
+end
+
+-- Forward-declared: defined below, but needed here since hl_query_for_lang
+-- is defined ahead of it in the file.
+local get_hl_query
+
+-- Resolve a span's language to an actual query, falling back to the
+-- caller's default (always available, resolved once up front) if the
+-- language's parser/query isn't installed.
+local function hl_query_for_lang(lang, fallback)
+	if lang == "cpp" or lang == nil then
+		return fallback
+	end
+	return get_hl_query(lang) or fallback
+end
+
 -- Parse `text` as cpp and set one extmark per highlight capture, with each
 -- virtual (row, col) remapped to a real buffer position via
 -- map_fn(row, col) -> lnum0, col (or nil to drop it). Shared by paint_side
@@ -209,7 +266,7 @@ local function paint_captures(bufnr, text, hl_query, map_fn, extra_hl)
 	if text == "" then
 		return
 	end
-	local parser = vim.treesitter.get_string_parser(text, "cpp")
+	local parser = vim.treesitter.get_string_parser(text, hl_query.lang)
 	local trees = parser:parse()
 	if not trees or not trees[1] then
 		return
@@ -383,12 +440,12 @@ local function paint_diffstat_summary(bufnr, lnum, raw)
 	accent("%(%-%)", "MailDiffstatMinus")
 end
 
-local function get_hl_query()
-	local ok = pcall(vim.treesitter.language.add, "cpp")
+function get_hl_query(lang)
+	local ok = pcall(vim.treesitter.language.add, lang)
 	if not ok then
 		return nil
 	end
-	return vim.treesitter.query.get("cpp", "highlights")
+	return vim.treesitter.query.get(lang, "highlights")
 end
 
 -- The subset of segment.is_structural that actually gets the "┃"/"Δ"
@@ -494,18 +551,32 @@ end
 -- get a full closed box (right edge too) or just top/bottom bars -- see
 -- paint_header_block_edge.
 local function paint_segment(bufnr, lines, seg, hl_query, winid)
-	local new_text, new_map = build_side(lines, seg.start_line, seg.end_line, "+")
-	paint_side(bufnr, new_text, new_map, hl_query)
+	local spans = file_language_spans(bufnr, lines, seg.start_line, seg.end_line)
 
-	local old_text, old_map = build_side(lines, seg.start_line, seg.end_line, "-")
-	paint_side(bufnr, old_text, old_map, hl_query)
+	for _, span in ipairs(spans) do
+		local span_query = hl_query_for_lang(span.lang, hl_query)
+		local new_text, new_map = build_side(lines, span.start_line, span.end_line, "+")
+		paint_side(bufnr, new_text, new_map, span_query)
+
+		local old_text, old_map = build_side(lines, span.start_line, span.end_line, "-")
+		paint_side(bufnr, old_text, old_map, span_query)
+	end
+
+	local function lang_for_lnum(lnum)
+		for _, span in ipairs(spans) do
+			if lnum >= span.start_line and lnum <= span.end_line then
+				return span.lang
+			end
+		end
+		return "cpp"
+	end
 
 	for lnum = seg.start_line, seg.end_line do
 		local raw = lines[lnum]
 		local _, payload = segment.strip_quote(raw)
 		if segment.is_structural(payload) then
 			if payload:match("^@@ ") then
-				paint_hunk_header(bufnr, lnum, raw, hl_query)
+				paint_hunk_header(bufnr, lnum, raw, hl_query_for_lang(lang_for_lnum(lnum), hl_query))
 				paint_block_marker(bufnr, lnum, raw, "MailHunkHeaderMarker")
 				paint_header_block_bg(bufnr, lnum, raw)
 			elseif payload:match("^diff %-%-git ") then
@@ -573,7 +644,7 @@ end
 function M.paint_buffer(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	ensure_highlights()
-	local hl_query = get_hl_query()
+	local hl_query = get_hl_query("cpp")
 	if not hl_query then
 		return
 	end
@@ -598,7 +669,7 @@ end
 -- Meant to be driven by enable_live's decoration provider.
 function M.paint_visible_range(bufnr, topline0, botline0, winid)
 	ensure_highlights()
-	local hl_query = get_hl_query()
+	local hl_query = get_hl_query("cpp")
 	if not hl_query then
 		return
 	end
@@ -657,6 +728,7 @@ function M.disable_live(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	live_enabled[bufnr] = nil
 	buffer_cache[bufnr] = nil
+	buffer_last_lang[bufnr] = nil
 end
 
 vim.api.nvim_create_autocmd("BufWipeout", {
@@ -664,6 +736,7 @@ vim.api.nvim_create_autocmd("BufWipeout", {
 	callback = function(args)
 		live_enabled[args.buf] = nil
 		buffer_cache[args.buf] = nil
+		buffer_last_lang[args.buf] = nil
 	end,
 })
 

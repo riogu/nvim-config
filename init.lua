@@ -73,6 +73,13 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.textwidth = 105
+  end,
+})
+
 
 vim.diagnostic.config({
     virtual_text = {
